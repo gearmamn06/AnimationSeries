@@ -8,7 +8,7 @@
 )](http://mit-license.org)
 
 
-Easy way to create a chain of animation.
+Easy way to create a chain of animation. <br />
 Animation3 = (Animation1 + Animation2) * 3
 
 
@@ -25,10 +25,10 @@ Add AnimationSeries.framework file to the project you want to use. (Check "copy 
 
 ## Why AnimationSeries?
 
-Using repetitive animation in an iOS project is not easy.
+Using repetitive animation in an iOS project is not easy. <br />
 For example, to write an animation code that repeats a blinking of a view three times:
 
-```
+```swift
 
     private func blinkView3times() {
         func appear(_ v: UIView, duration: TimeInterval, completed: ((Bool) -> Void)?) {
@@ -58,10 +58,10 @@ For example, to write an animation code that repeats a blinking of a view three 
 
 ```
 
-But what if you have to blink the view 100 times? This way is not cool.. Or you could solve the problem by giving a delay to each animation in a loop.
+But what if you have to blink the view 100 times? This way is not cool.. Or you could solve the problem by giving a delay to each animation in a loop. <br />
 But it is cumbersome to calculate. We can use AnimationSeries to solve the problem more intuitively.
 
-```
+```swift
 
     private func blinkView3times() {
         let blink = myView.disappear(duration: 1.0) + myView.appear(duration: 1.0)
@@ -71,14 +71,14 @@ But it is cumbersome to calculate. We can use AnimationSeries to solve the probl
 
 ```
 
-How is it? Does this look more intuitive and simple?
-AnimationSeries was made under the same difficulties as above.
+How is it? Does this look more intuitive and simple? <br />
+AnimationSeries was made under the same difficulties as above. <br />
 With this you can make the view animation easier.
 
 
 ## The Basics
 
-There is a default animation declared in this project at view extension.(.appear, .disappear, .discolor, .move, .rotate, sizing)
+There is a default animation declared in this project at view extension.(.appear, .disappear, .discolor, .move, .rotate, sizing) <br />
 These animation functions are connected using the + (sequential connection) and * (repetition) operators.
 Calling the start function on the associated animation instance starts a series of animations.
 
@@ -87,7 +87,7 @@ Calling the start function on the associated animation instance starts a series 
 
 One of the following animations returns a Recursion instance. Calling the start function starts the animation. By registering the onNext callback of the Recursion instance, you can get the end callback of the animation.
 
-```
+```swift
 
     /// view.alpha -> 1.0 with flat parameters
     public func appear(duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> Recursion {
@@ -107,12 +107,12 @@ One of the following animations returns a Recursion instance. Calling the start 
 
 ### Combine animations
 
-Recursion instances can be combined with other Recursion instances or RecursionSeries instances using the + operator
-Combined instances return a new RecursionSeries.
-Calling the start method of a new object starts a series of animations. Similarly, registering a new object's onNext callback allows you to get a callback that is called after all animation has finished.
+Recursion instances can be combined with other Recursion instances or RecursionSeries instances using the + operator <br />
+Combined instances return a new RecursionSeries. <br />
+Calling the start method of a new object starts a series of animations. Similarly, registering a new object's onNext callback allows you to get a callback that is called after all animation has finished. <br />
 (If you register a CompleteCallback to a single animation, you can get a callback when it ends.)
 
-```
+```swift
 
     private func startInitialAnim() {
         let anim = animView.sizing(scale: (40, 40), duration: 0) + animView.sizing(scale: (0.6, 0.6), duration: 1.6, { _ in
@@ -132,7 +132,7 @@ Calling the start method of a new object starts a series of animations. Similarl
 
 RecursionSeries instances can be repeated using the * operator.
 
-```
+```swift
     let singleCycle = view.discolor(to: .orange, duration: 1) + view.discolor(to: .yellow, duration: 1) + view.discolor(to: .green, duration: 1) + view.discolor(to: .blue, duration: 1) + view.discolor(to: .purple, duration: 1)
 
     let repeating = singleCycle * 10
@@ -146,7 +146,7 @@ RecursionSeries instances can be repeated using the * operator.
 
 You can use the clear function to stop the animation.(Additional work is required to return the view to its original appearance.)
 
-```
+```swift
 
     private func clearCurrentAnimation() {
         self.currentAnimations.forEach{ $0.clear() }
@@ -165,10 +165,10 @@ You can use the clear function to stop the animation.(Additional work is require
 
 ### Caution
 
-All Recursable(Recursion or RecursionSeries) instances are not restartable after clear is called. (It will probably stop again at the point where it was previously terminated.)
+All Recursable(Recursion or RecursionSeries) instances are not restartable after clear is called. (It will probably stop again at the point where it was previously terminated.) <br />
 It is also a reference type, so it is not copied.
 
-```
+```swift
  
     private func wrongUsage() {
         
@@ -185,7 +185,7 @@ It is also a reference type, so it is not copied.
 
 You can create a class that inherits AnimationSeries to define the animation you want. Or add an animation to the extension of the view.
 
-```
+```swift
 
     import UIKit
     import AnimationSeries
