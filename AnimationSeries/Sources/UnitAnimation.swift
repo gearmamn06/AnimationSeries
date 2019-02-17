@@ -119,7 +119,8 @@ class Move: UnitAnimation {
             return
         }
         UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
-            self.view.transform = CGAffineTransform(translationX: self.destination.x, y: self.destination.y)
+            let transform = self.view.transform.concatenating(CGAffineTransform(translationX: self.destination.x, y: self.destination.y))
+            self.view.transform = transform
         }, completion: { end in
             if end {
                 self.onEnd()
