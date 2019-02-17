@@ -9,7 +9,7 @@
 
 
 Easy way to create a chain of animation.
-\nAnimation3 = (Animation1 + Animation2) * 3
+Animation3 = (Animation1 + Animation2) * 3
 
 
 ## Requirements
