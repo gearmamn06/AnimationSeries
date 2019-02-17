@@ -15,8 +15,6 @@ extension UIView {
     
     
     
-    /////////////// Change View Alpa //////////////////
-    
     /// view.alpha -> 1.0 with flat parameters
     public func appear(duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> Recursion {
         let anim = Appear(self, params: AnimationParameter(duration, delay: delay, options: options), complete)
@@ -44,8 +42,6 @@ extension UIView {
 
     
     
-    /////////////// Change View BackgroundColor //////////////////
-    
     /// change view background color with flat parameters
     public func discolor(to: UIColor, duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> Recursion {
         let anim = Discolor(self, params: AnimationParameter(duration, delay: delay, options: options), color: to, complete: complete)
@@ -58,8 +54,6 @@ extension UIView {
     }
     
     
-    
-    /////////////// Change View Position //////////////////
     
     /// translate view position with flat parameters
     public func move(position offset: CGPoint, duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> Recursion {
@@ -75,8 +69,6 @@ extension UIView {
     
     
     
-    /////////////// Change View Rotation Angle //////////////////
-    
     /// change view rotation angle with flat parameters
     public func rotate(degree: CGFloat, duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> Recursion {
         let anim = Rotate(self, params: AnimationParameter(duration, delay: delay, options: options), degree: degree, complete: complete)
@@ -90,8 +82,6 @@ extension UIView {
     }
     
     
-    
-    /////////////// Change View Size //////////////////
     
     /// change size of the view with flat parameters
     public func sizing(scale to: (CGFloat, CGFloat), duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> Recursion {

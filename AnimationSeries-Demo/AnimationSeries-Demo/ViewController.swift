@@ -56,6 +56,14 @@ extension ViewController {
         }
         anim.start()
     }
+    
+    private func wrongUsage() {
+        
+        // wrong: blink will not be copied
+        let blink = animView.disappear(duration: 1) + animView.appear(duration: 1)
+        let blinks3Times = blink + blink + blink
+        blinks3Times.start()
+    }
 }
 
 
