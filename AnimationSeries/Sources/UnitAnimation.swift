@@ -9,7 +9,7 @@
 import UIKit
 
 
-struct UnitAnimAttr: Parameter {
+public struct UnitAnimAttr: Parameter {
     fileprivate let duration: TimeInterval
     fileprivate let delay: TimeInterval
     fileprivate let options: UIView.AnimationOptions

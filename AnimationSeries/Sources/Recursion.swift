@@ -11,37 +11,37 @@ import Foundation
 import Foundation
 
 
-typealias CompleteCallback = (Any) -> Void
-protocol Parameter {}
+public typealias CompleteCallback = (Any) -> Void
+public protocol Parameter {}
 
-protocol Recursable {
+public protocol Recursable {
     var onNext: (() -> Void)? { get set }
     func start()
 }
 
-class Recursion: Recursable {
+public class Recursion: Recursable {
     
     let params: Parameter
     var onCompleted: CompleteCallback?
-    var onNext: (() -> Void)?
+    public var onNext: (() -> Void)?
     
     
     init(params: Parameter, _ complete: CompleteCallback? = nil) {
         self.params = params
         self.onCompleted = complete
     }
-    func start() {}
+    public func start() {}
 }
 
 
-class RecursionSeries: Recursable {
+public class RecursionSeries: Recursable {
     
     let first: Recursion
     let last: Recursion
     var loopCount: Int = 0
     var loopCycle: Int
     var loop: ((Int) -> Void)?
-    var onNext: (() -> Void)?
+    public var onNext: (() -> Void)?
     
     
     init(first: Recursion, last: Recursion, loopCycle: Int = 0) {
@@ -50,14 +50,14 @@ class RecursionSeries: Recursable {
         self.loopCycle = loopCycle
     }
     
-    func start() {
+    public func start() {
         first.start()
     }
 }
 
 
 infix operator +
-func + (previous: Recursable, next: Recursable) -> RecursionSeries {
+public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
     switch (previous, next) {
     case (is Recursion, is Recursion):
         let previous = previous as! Recursion
