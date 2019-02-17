@@ -7,14 +7,55 @@
 //
 
 import UIKit
+import AnimationSeries
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var animView: UIView!
+    @IBOutlet weak var tableView: UITableView!
+
+    private let types = AnimationExampleType.allCases.filter{ $0 != .none }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        initialAniamtion()
+        setUpTableView()
     }
 
+    
+    private func initialAniamtion() {
+        let anim = animView.sizing(scale: (40, 40), duration: 0) + animView.sizing(scale: (0.6, 0.6), duration: 1.6) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
+        anim.start()
+    }
 
+}
+
+
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
+
+    private func setUpTableView() {
+        self.tableView.register(AnimListItemCell.self, forCellReuseIdentifier: AnimListItemCell.name)
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.backgroundColor = UIColor.groupTableViewBackground
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return types.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: AnimListItemCell.name) as! AnimListItemCell
+        cell.type = self.types[indexPath.row]
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? AnimListItemCell else { return }
+        let anims = cell.type.animate(self.animView)
+        anims.forEach { $0.start() }
+    }
 }
 
