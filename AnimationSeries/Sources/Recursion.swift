@@ -56,7 +56,6 @@ public class RecursionSeries: Recursable {
 }
 
 
-infix operator +
 public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
     switch (previous, next) {
     case (is Recursion, is Recursion):
@@ -115,9 +114,7 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
 }
 
 
-infix operator *
-
-func * (chain: RecursionSeries, times: Int) -> RecursionSeries {
+public func * (chain: RecursionSeries, times: Int) -> RecursionSeries {
     let sender = RecursionSeries(first: chain.first, last: chain.last, loopCycle: times)
     chain.loop = { count in
         let isLoop1CycleEnd = count % times == 0
