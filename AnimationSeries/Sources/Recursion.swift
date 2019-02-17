@@ -17,30 +17,36 @@ public protocol Parameter {}
 public protocol Recursable {
     var onNext: (() -> Void)? { get set }
     func start()
+    func clear()
 }
 
-public class Recursion: Recursable {
+open class Recursion: Recursable {
     
     let params: Parameter
     var onCompleted: CompleteCallback?
     public var onNext: (() -> Void)?
-    
     
     init(params: Parameter, _ complete: CompleteCallback? = nil) {
         self.params = params
         self.onCompleted = complete
     }
     public func start() {}
+    
+    public func clear() {
+        self.onNext = nil
+    }
 }
 
 
-public class RecursionSeries: Recursable {
+open class RecursionSeries: Recursable {
     
     let first: Recursion
     let last: Recursion
     var loopCount: Int = 0
     var loopCycle: Int
     var loop: ((Int) -> Void)?
+    fileprivate var waitingJob: (Recursable, Recursable?)?
+    fileprivate var isPaused = false
     public var onNext: (() -> Void)?
     
     
@@ -52,6 +58,12 @@ public class RecursionSeries: Recursable {
     
     public func start() {
         first.start()
+    }
+    
+    public func clear() {
+        self.isPaused = true
+        waitingJob?.1?.clear(); waitingJob?.1?.onNext = nil
+        waitingJob?.0.clear(); waitingJob?.0.onNext = nil
     }
 }
 
@@ -70,6 +82,7 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
             // first unit end -> call next uint
             next.start()
         }
+        sender.waitingJob = (previous, next)
         return sender
         
     case (is Recursion, is RecursionSeries):
@@ -84,6 +97,7 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
             // first unit end -> call next recursion
             next.start()
         }
+        sender.waitingJob = (previous, next)
         return sender
         
     case (is RecursionSeries, is Recursion):
@@ -97,6 +111,7 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
             // first recursion end -> call next unit
             next.start()
         }
+        sender.waitingJob = (previous, next)
         return sender
         
     default:
@@ -109,6 +124,7 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
         previous.onNext = {
             next.start()
         }
+        sender.waitingJob = (previous, next)
         return sender
     }
 }
@@ -117,6 +133,12 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
 public func * (chain: RecursionSeries, times: Int) -> RecursionSeries {
     let sender = RecursionSeries(first: chain.first, last: chain.last, loopCycle: times)
     chain.loop = { count in
+        if sender.isPaused {
+            chain.loop = nil
+            chain.onNext = nil
+            chain.clear()
+            return
+        }
         let isLoop1CycleEnd = count % times == 0
         if isLoop1CycleEnd {
             // recursion * times end -> exit
@@ -131,6 +153,7 @@ public func * (chain: RecursionSeries, times: Int) -> RecursionSeries {
         chain.loopCount += 1
         chain.loop?(chain.loopCount)
     }
+    sender.waitingJob = (chain, nil)
     return sender
 }
 

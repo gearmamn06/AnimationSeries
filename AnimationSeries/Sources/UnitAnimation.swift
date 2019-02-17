@@ -22,7 +22,7 @@ public struct UnitAnimAttr: Parameter {
 }
 
 
-class UnitAnimation: Recursion {
+open class UnitAnimation: Recursion {
     
     fileprivate let view: UIView
     
@@ -36,6 +36,10 @@ class UnitAnimation: Recursion {
         self.onCompleted?(true)
     }
     
+    override public func clear() {
+        super.clear()
+        self.view.layer.removeAllAnimations()
+    }
 }
 
 
@@ -49,9 +53,10 @@ class Appear: UnitAnimation {
         }
         UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
             self.view.alpha = 1.0
-        }, completion: { _ in
-            self.onNext?()
-            self.onCompleted?(true)
+        }, completion: { end in
+            if end {
+                self.onEnd()
+            }
         })
     }
 }
@@ -65,8 +70,10 @@ class Disappear: UnitAnimation {
         }
         UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
             self.view.alpha = 0.0
-        }, completion: { _ in
-            self.onEnd()
+        }, completion: { end in
+            if end {
+                self.onEnd()
+            }
         })
     }
 }
@@ -88,8 +95,10 @@ class Discolor: UnitAnimation {
         }
         UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
             self.view.backgroundColor = self.color
-        }, completion: { _ in
-            self.onEnd()
+        }, completion: { end in
+            if end {
+                self.onEnd()
+            }
         })
     }
 }
@@ -111,8 +120,10 @@ class Move: UnitAnimation {
         }
         UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
             self.view.transform = CGAffineTransform(translationX: self.destination.x, y: self.destination.y)
-        }, completion: { _ in
-            self.onEnd()
+        }, completion: { end in
+            if end {
+                self.onEnd()
+            }
         })
     }
 }
@@ -134,8 +145,10 @@ class Rotate: UnitAnimation {
         }
         UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
             self.view.transform = CGAffineTransform(rotationAngle: self.radian)
-        }, completion: { _ in
-            self.onEnd()
+        }, completion: { end in
+            if end {
+                self.onEnd()
+            }
         })
     }
 }
@@ -155,8 +168,10 @@ class Sizing: UnitAnimation {
         }
         UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
             self.view.transform = CGAffineTransform(scaleX: self.scale.0, y: self.scale.1)
-        }, completion: { _ in
-            self.onEnd()
+        }, completion: { end in
+            if end {
+                self.onEnd()
+            }
         })
     }
 }
