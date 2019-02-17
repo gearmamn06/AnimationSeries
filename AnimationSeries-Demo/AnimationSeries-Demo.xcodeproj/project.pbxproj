@@ -12,7 +12,23 @@
 		2B74BAB72219724000480D68 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B74BAB52219724000480D68 /* Main.storyboard */; };
 		2B74BAB92219724100480D68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B74BAB82219724100480D68 /* Assets.xcassets */; };
 		2B74BABC2219724100480D68 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B74BABA2219724100480D68 /* LaunchScreen.storyboard */; };
+		2B74BAD82219778D00480D68 /* AnimationSeries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; };
+		2B74BAD92219778D00480D68 /* AnimationSeries.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2B74BADA2219778D00480D68 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2B74BAD92219778D00480D68 /* AnimationSeries.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2B74BAAE2219724000480D68 /* AnimationSeries-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AnimationSeries-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,6 +38,7 @@
 		2B74BAB82219724100480D68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2B74BABB2219724100480D68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2B74BABD2219724100480D68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B74BAD72219778D00480D68 /* AnimationSeries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AnimationSeries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B74BAD82219778D00480D68 /* AnimationSeries.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +56,7 @@
 		2B74BAA52219724000480D68 = {
 			isa = PBXGroup;
 			children = (
+				2B74BAD72219778D00480D68 /* AnimationSeries.framework */,
 				2B74BAB02219724000480D68 /* AnimationSeries-Demo */,
 				2B74BAAF2219724000480D68 /* Products */,
 			);
@@ -74,6 +93,7 @@
 				2B74BAAA2219724000480D68 /* Sources */,
 				2B74BAAB2219724000480D68 /* Frameworks */,
 				2B74BAAC2219724000480D68 /* Resources */,
+				2B74BADA2219778D00480D68 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -284,6 +304,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2ABNASUGL6;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "AnimationSeries-Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -302,6 +327,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2ABNASUGL6;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "AnimationSeries-Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
