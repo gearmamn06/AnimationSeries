@@ -10,7 +10,6 @@ import UIKit
 import AnimationSeries
 
 
-
 class ViewController: UIViewController {
 
     @IBOutlet weak var animView: UIView!
@@ -30,6 +29,7 @@ class ViewController: UIViewController {
 }
 
 
+
 /// animation setting
 extension ViewController {
     
@@ -47,15 +47,20 @@ extension ViewController {
     }
     
     private func startInitialAnim() {
-        let anim = animView.sizing(scale: (40, 40), duration: 0) + animView.sizing(scale: (0.6, 0.6), duration: 1.6, { _ in print("shrink end..") }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
+        let anim = animView.sizing(scale: (40, 40), duration: 0) + animView.sizing(scale: (0.6, 0.6), duration: 1.6, { _ in
+            print("shrink(single animation) end.")
+        }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
+        
         anim.onNext = {
-            print("intial animation end...")
+            print("Intial animation(animation series) end.")
         }
         anim.start()
     }
 }
 
 
+
+/// tableview setting
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     private func setUpTableView() {
