@@ -14,7 +14,7 @@ public struct AnimationParameter: Parameter {
     internal let delay: TimeInterval
     internal let options: UIView.AnimationOptions
     
-    init(_ duration: TimeInterval, delay: TimeInterval, options: UIView.AnimationOptions) {
+    public init(_ duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = []) {
         self.duration = duration
         self.delay = delay
         self.options = options

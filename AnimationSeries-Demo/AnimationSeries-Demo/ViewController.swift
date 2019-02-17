@@ -30,7 +30,7 @@ class ViewController: UIViewController {
 
 
 
-/// animation setting
+/// animations
 extension ViewController {
     
     private func clearCurrentAnimation() {
@@ -64,6 +64,20 @@ extension ViewController {
         let blinks3Times = blink + blink + blink
         blinks3Times.start()
     }
+    
+    
+    private func customMoveAnimation() {
+        let params = AnimationParameter(0.2)
+        let paths = (0..<10).reduce(into: [(CGPoint, AnimationParameter)](), { ary, n in
+            ary.append((CGPoint(x: ary.count + 10, y: 0), params))
+        })
+        let anim = animView.move(path: paths)
+        anim?.onNext = {
+            print("moving all end..")
+        }
+        anim?.start()
+    }
+    
 }
 
 

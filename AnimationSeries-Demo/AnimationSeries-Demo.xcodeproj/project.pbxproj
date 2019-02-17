@@ -15,6 +15,7 @@
 		2B74BAD82219778D00480D68 /* AnimationSeries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; };
 		2B74BAD92219778D00480D68 /* AnimationSeries.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2B74BADC22197ABE00480D68 /* AnimListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BADB22197ABE00480D68 /* AnimListItemCell.swift */; };
+		2B74BAE22219D9AC00480D68 /* MyAnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAE12219D9AC00480D68 /* MyAnimationExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +42,7 @@
 		2B74BABD2219724100480D68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B74BAD72219778D00480D68 /* AnimationSeries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AnimationSeries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B74BADB22197ABE00480D68 /* AnimListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimListItemCell.swift; sourceTree = "<group>"; };
+		2B74BAE12219D9AC00480D68 /* MyAnimationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAnimationExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				2B74BAB82219724100480D68 /* Assets.xcassets */,
 				2B74BABA2219724100480D68 /* LaunchScreen.storyboard */,
 				2B74BABD2219724100480D68 /* Info.plist */,
+				2B74BAE12219D9AC00480D68 /* MyAnimationExtension.swift */,
 			);
 			path = "AnimationSeries-Demo";
 			sourceTree = "<group>";
@@ -158,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B74BAE22219D9AC00480D68 /* MyAnimationExtension.swift in Sources */,
 				2B74BAB42219724000480D68 /* ViewController.swift in Sources */,
 				2B74BADC22197ABE00480D68 /* AnimListItemCell.swift in Sources */,
 				2B74BAB22219724000480D68 /* AppDelegate.swift in Sources */,
