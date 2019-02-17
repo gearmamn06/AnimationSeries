@@ -9,7 +9,10 @@
 
 
 Easy way to create a chain of animation. <br />
-Animation3 = (Animation1 + Animation2) * 3
+ex) Animation3 = (Animation1 + Animation2) * 3
+
+
+![](https://github.com/gearmamn06/AnimationSeries/blob/master/AnimationSeries-Demo/AnimationSeries-Demo/demo_app.gif)
 
 
 ## Requirements
