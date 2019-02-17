@@ -1,8 +1,15 @@
 # AnimationSeries
 
+[![Platform](http://img.shields.io/badge/platform-ios-blue.svg?style=flat
+)](https://developer.apple.com/iphone/index.action)
+[![Language](http://img.shields.io/badge/language-swift-brightgreen.svg?style=flat
+)](https://developer.apple.com/swift)
+[![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat
+)](http://mit-license.org)
+
 
 Easy way to create a chain of animation.
-Animation3 = (Animation1 + Animation2) * 3
+\nAnimation3 = (Animation1 + Animation2) * 3
 
 
 ## Requirements
@@ -18,8 +25,8 @@ Add AnimationSeries.framework file to the project you want to use. (Check "copy 
 
 ## Why AnimationSeries?
 
-iOS 프로젝트에서 반복적인 애니메이션을 사용하는것은 쉽지않다
-가령 한 뷰가 깜빡이는것을 3회 반복하는 애니메이션 코드를 짜려면 기존의 방식으로는 다음과 같이 짤 수 있다
+Using repetitive animation in an iOS project is not easy.
+For example, to write an animation code that repeats a blinking of a view three times:
 
 ```
 
@@ -51,8 +58,8 @@ iOS 프로젝트에서 반복적인 애니메이션을 사용하는것은 쉽지
 
 ```
 
-하지만 만일 뷰를 100번 깜빡여야 한다면 어떨까. 이방법은 쿨하지 않다. 이는 루프를 돌면서 각 애니메이션마다 딜레이를 줘서 해결 할 수 있을것이다.
-하지만 그것은 계산하기 번거롭고 우리는 AnimationSeries를 이용하여 더 직관적으로 이를 해결하 수 있다.
+But what if you have to blink the view 100 times? This way is not cool.. Or you could solve the problem by giving a delay to each animation in a loop.
+But it is cumbersome to calculate. We can use AnimationSeries to solve the problem more intuitively.
 
 ```
 
@@ -64,21 +71,21 @@ iOS 프로젝트에서 반복적인 애니메이션을 사용하는것은 쉽지
 
 ```
 
-어떤가? 보다 직관적이지 않는가? 계다가 코드가 더 짧아지고 비동기 콜백 체인이 사라졌다
-AnimationSeries는 위와같은 고민 하에서 만들어졌다.
-이것을 이용하여 너는 뷰 애니메이션을 더 쉽고 간결하게 만들 수 있다.
+How is it? Does this look more intuitive and simple?
+AnimationSeries was made under the same difficulties as above.
+With this you can make the view animation easier.
 
 
 ## The Basics
 
-이 프로젝트에 기본적인 애니메이션(등장, 사라짐, 색상 변화, 이동, 회전, 크기변화)이 extenson으로 선언되어있다.
-이 함수들을 +(순차적 연결), * (반복) 연산자를 이용하여 더 직관적으로 연결시켜라
-연결된 애니메이션 인스턴스에 start 함수를 콜하면 일렬의 애니메이션이 시작된다.
+There is a default animation declared in this project at view extension.(.appear, .disappear, .discolor, .move, .rotate, sizing)
+These animation functions are connected using the + (sequential connection) and * (repetition) operators.
+Calling the start function on the associated animation instance starts a series of animations.
 
 
-### 단일 애니메이션
+### Single animation
 
-다음과같은 애니메이션 하나는 Recursion 인스턴스를 반환시킨다. 애니메이션의 시작은 start이고 Recursion 인스턴스의 onNext 콜백을 등록하면 이 애니메이션의 종료를 수신 할 수 있다.
+One of the following animations returns a Recursion instance. Calling the start function starts the animation. By registering the onNext callback of the Recursion instance, you can get the end callback of the animation.
 
 ```
 
@@ -95,15 +102,15 @@ AnimationSeries는 위와같은 고민 하에서 만들어졌다.
     }
 
 ```
-(AnimationParameter은 시간, 딜레이, 옵션을 담는 스트럭이다.)
+(AnimationParameter is a struct that contains time, delay, and options.)
 
 
-### 애니메이션 결합
+### Combine animations
 
-Recursion 인스턴스는 다른 Recursion 인스탄스 및 RecursionSeries 인스턴스와 + 연산자를 이용하여 결합될 수 있다
-결합된 인스턴스들은 새로운 RecursionSeries를 반환한다.
-이 객체의 start 메소드를 호출하면 일렬의 애니메이션을 시작 한다. 이 객체의 onNext 콜백을 등록하면 모든 애미메이션이 종료한 후 콜백을 받을 수 있다.
-(단일 애니메이션에 complete 콜백을 등록하면, 단일 애니메이션이 종료되는 콜백을 받을 수 있다.)
+Recursion instances can be combined with other Recursion instances or RecursionSeries instances using the + operator
+Combined instances return a new RecursionSeries.
+Calling the start method of a new object starts a series of animations. Similarly, registering a new object's onNext callback allows you to get a callback that is called after all animation has finished.
+(If you register a CompleteCallback to a single animation, you can get a callback when it ends.)
 
 ```
 
@@ -121,9 +128,9 @@ Recursion 인스턴스는 다른 Recursion 인스탄스 및 RecursionSeries 인�
 ```
 
 
-### 애니메이션 반복
+### Loop animation
 
-RecursionSeries 객체는 * 연산자를 이용하여 반복될 수 있다.
+RecursionSeries instances can be repeated using the * operator.
 
 ```
     let singleCycle = view.discolor(to: .orange, duration: 1) + view.discolor(to: .yellow, duration: 1) + view.discolor(to: .green, duration: 1) + view.discolor(to: .blue, duration: 1) + view.discolor(to: .purple, duration: 1)
@@ -132,12 +139,12 @@ RecursionSeries 객체는 * 연산자를 이용하여 반복될 수 있다.
     repeating.start()
 
 ```
-* recursion 인스턴스는 반복되지 않는다.(단일 애니메이션 이후 변한 상태가 없기 떄문) 단일 애니메이션의 반복을 원한다면 원상태로 바로 복귀시키는 recursion과 결합시킨 이후(duration = 0) recursionSeries를 만들어 반복을 하여라
+* Recursion instances are not repeated. 
 
 
-### 애니메이션 중지
+### Clear Animation
 
-clear 함수를 이용하여 애니메이션을 종료시켜라 (뷰를 원래상태로 복귀시키려면 추가적인 작업이 필요하다.)
+You can use the clear function to stop the animation.(Additional work is required to return the view to its original appearance.)
 
 ```
 
@@ -156,10 +163,10 @@ clear 함수를 이용하여 애니메이션을 종료시켜라 (뷰를 원래�
 
 ```
 
-### 주의사항
+### Caution
 
-모든 Recursable (recursion or recursionSeries) 인스턴스들은 clear가 호출된 이후 이것은 재시작이 불가능하다. (아마 종료된 시점에서 다시 중지될것이다.)
-또한 참조형이기 때문에 복사되지 않는다
+All Recursable(Recursion or RecursionSeries) instances are not restartable after clear is called. (It will probably stop again at the point where it was previously terminated.)
+It is also a reference type, so it is not copied.
 
 ```
  
@@ -176,7 +183,7 @@ clear 함수를 이용하여 애니메이션을 종료시켜라 (뷰를 원래�
 
 ## Customizing
 
-AnimationSeries를 상속받는 커스텀 클래스를 만들어 너가 원하는 애니메이션을 정의할 수 있다. 혹은 view의 extension에 애니메이션을 추가해라
+You can create a class that inherits AnimationSeries to define the animation you want. Or add an animation to the extension of the view.
 
 ```
 
