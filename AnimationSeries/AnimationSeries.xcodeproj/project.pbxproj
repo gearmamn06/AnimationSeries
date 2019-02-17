@@ -8,18 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		2B74BA9F2219720B00480D68 /* AnimationSeries.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B74BA9D2219720B00480D68 /* AnimationSeries.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2B74BAC6221973DB00480D68 /* UnitAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC3221973DB00480D68 /* UnitAnimation.swift */; };
-		2B74BAC7221973DB00480D68 /* UnitAnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC4221973DB00480D68 /* UnitAnimationExtension.swift */; };
+		2B74BAC7221973DB00480D68 /* UIView_AnimationSeries+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */; };
 		2B74BAC8221973DB00480D68 /* Recursion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC5221973DB00480D68 /* Recursion.swift */; };
+		2B74BAE02219B80100480D68 /* AnimationSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BADF2219B80100480D68 /* AnimationSeries.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2B74BA9A2219720B00480D68 /* AnimationSeries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AnimationSeries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B74BA9D2219720B00480D68 /* AnimationSeries.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationSeries.h; sourceTree = "<group>"; };
 		2B74BA9E2219720B00480D68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2B74BAC3221973DB00480D68 /* UnitAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitAnimation.swift; sourceTree = "<group>"; };
-		2B74BAC4221973DB00480D68 /* UnitAnimationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitAnimationExtension.swift; sourceTree = "<group>"; };
+		2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView_AnimationSeries+Extension.swift"; sourceTree = "<group>"; };
 		2B74BAC5221973DB00480D68 /* Recursion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recursion.swift; sourceTree = "<group>"; };
+		2B74BADF2219B80100480D68 /* AnimationSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationSeries.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,8 +53,8 @@
 			isa = PBXGroup;
 			children = (
 				2B74BAC5221973DB00480D68 /* Recursion.swift */,
-				2B74BAC3221973DB00480D68 /* UnitAnimation.swift */,
-				2B74BAC4221973DB00480D68 /* UnitAnimationExtension.swift */,
+				2B74BADF2219B80100480D68 /* AnimationSeries.swift */,
+				2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */,
 				2B74BA9D2219720B00480D68 /* AnimationSeries.h */,
 				2B74BA9E2219720B00480D68 /* Info.plist */,
 			);
@@ -141,8 +141,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B74BAC8221973DB00480D68 /* Recursion.swift in Sources */,
-				2B74BAC7221973DB00480D68 /* UnitAnimationExtension.swift in Sources */,
-				2B74BAC6221973DB00480D68 /* UnitAnimation.swift in Sources */,
+				2B74BAE02219B80100480D68 /* AnimationSeries.swift in Sources */,
+				2B74BAC7221973DB00480D68 /* UIView_AnimationSeries+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

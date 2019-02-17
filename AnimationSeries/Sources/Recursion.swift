@@ -14,6 +14,7 @@ import Foundation
 public typealias CompleteCallback = (Any) -> Void
 public protocol Parameter {}
 
+
 public protocol Recursable {
     var onNext: (() -> Void)? { get set }
     func start()
@@ -30,6 +31,7 @@ open class Recursion: Recursable {
         self.params = params
         self.onCompleted = complete
     }
+    
     public func start() {}
     
     public func clear() {
