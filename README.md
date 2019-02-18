@@ -66,7 +66,7 @@ We can use AnimationSeries to solve the problem more intuitively.
 
 ```swift
 
-    private func blinkView3times() {
+    private func blinkView100times() {
         let blink = myView.disappear(duration: 1.0) + myView.appear(duration: 1.0)
         let anim = blink * 100
         anim.start()
