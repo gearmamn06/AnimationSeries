@@ -9,7 +9,10 @@
 
 
 Easy way to create a chain of animation. <br />
-Animation3 = (Animation1 + Animation2) * 3
+ex) Animation3 = (Animation1 + Animation2) * 3 <br />
+
+
+![](https://github.com/gearmamn06/AnimationSeries/blob/master/AnimationSeries-Demo/AnimationSeries-Demo/demo.gif)
 
 
 ## Requirements
@@ -58,12 +61,12 @@ For example, to write an animation code that repeats a blinking of a view three 
 
 ```
 
-But what if you have to blink the view 100 times? This way is not cool.. Or you could solve the problem by giving a delay to each animation in a loop. <br />
-But it is cumbersome to calculate. We can use AnimationSeries to solve the problem more intuitively.
+What if you have to blink the view 100 times? This way is not cool.. Or you could solve the problem by giving a delay to each animation in a loop. But it is cumbersome to calculate. <br /> <br />
+We can use AnimationSeries to solve the problem more intuitively.
 
 ```swift
 
-    private func blinkView3times() {
+    private func blinkView100times() {
         let blink = myView.disappear(duration: 1.0) + myView.appear(duration: 1.0)
         let anim = blink * 100
         anim.start()
@@ -72,14 +75,13 @@ But it is cumbersome to calculate. We can use AnimationSeries to solve the probl
 ```
 
 How is it? Does this look more intuitive and simple? <br />
-AnimationSeries was made under the same difficulties as above. <br />
-With this you can make the view animation easier.
+AnimationSeries was made under the same difficulties as above. With this you can make the view animation easier.
 
 
 ## The Basics
 
-There is a default animation declared in this project at view extension.(.appear, .disappear, .discolor, .move, .rotate, sizing) <br />
-These animation functions are connected using the + (sequential connection) and * (repetition) operators.
+There are default animations declared in this project at view extension.(.appear, .disappear, .discolor, .move, .rotate, sizing) <br />
+These animation functions could be connected using the + (sequential connection) and * (repetition) operators.
 Calling the start function on the associated animation instance starts a series of animations.
 
 
