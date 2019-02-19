@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B0870C5221A057D0045A110 /* demo_app.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2B0870C4221A057C0045A110 /* demo_app.gif */; };
 		2B74BAB22219724000480D68 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAB12219724000480D68 /* AppDelegate.swift */; };
 		2B74BAB42219724000480D68 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAB32219724000480D68 /* ViewController.swift */; };
 		2B74BAB72219724000480D68 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B74BAB52219724000480D68 /* Main.storyboard */; };
@@ -34,7 +33,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2B0870C4221A057C0045A110 /* demo_app.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo_app.gif; sourceTree = "<group>"; };
 		2B74BAAE2219724000480D68 /* AnimationSeries-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AnimationSeries-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B74BAB12219724000480D68 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2B74BAB32219724000480D68 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 				2B74BABA2219724100480D68 /* LaunchScreen.storyboard */,
 				2B74BABD2219724100480D68 /* Info.plist */,
 				2B74BAE12219D9AC00480D68 /* MyAnimationExtension.swift */,
-				2B0870C4221A057C0045A110 /* demo_app.gif */,
 			);
 			path = "AnimationSeries-Demo";
 			sourceTree = "<group>";
@@ -152,7 +149,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B74BABC2219724100480D68 /* LaunchScreen.storyboard in Resources */,
-				2B0870C5221A057D0045A110 /* demo_app.gif in Resources */,
 				2B74BAB92219724100480D68 /* Assets.xcassets in Resources */,
 				2B74BAB72219724000480D68 /* Main.storyboard in Resources */,
 			);
