@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "AnimationSeries"
-  spec.version      = "1.0.1"
+  spec.version      = "1.0.2"
   spec.summary      = "Easy way to create a chain of animation."
 
 
@@ -52,7 +52,7 @@ SOFTWARE.
 
   spec.ios.vendored_frameworks = 'AnimationSeries.framework'
   # spec.source_files  = ["AnimationSeries/Sources/**/*.swift", "AnimationSeries/Sources/AnimationSeries.h"]
-  spec.source = { :http => 'https://s3-us-west-2.amazonaws.com/elasticbeanstalk-us-west-2-291822295618/AnimationSeriesFramework.zip'}
+  spec.source = { :http => 'https://github.com/gearmamn06/AnimationSeries/blob/master/AnimationSeriesFramework.zip'}
   # spec.exclude_files = "Classes/Exclude"
   # spec.public_header_files = ["AnimationSeries/Sources/AnimationSeries.h"]
   spec.requires_arc = true
