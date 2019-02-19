@@ -1,0 +1,11 @@
+framework module AnimationSeries {
+  umbrella header "AnimationSeries.h"
+
+  export *
+  module * { export * }
+}
+
+module AnimationSeries.Swift {
+    header "AnimationSeries-Swift.h"
+    requires objc
+}
