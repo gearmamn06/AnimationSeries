@@ -21,8 +21,11 @@ iOS 10.0+
 
 
 ## Installation
-
-Add AnimationSeries.framework file to the project you want to use. (Check "copy items if needed")
+### Cocoapods
+```ruby
+pod 'AnimationSeries'
+```
+Or add AnimationSeries.framework file to the project you want to use. (Check "copy items if needed")
 
 
 
