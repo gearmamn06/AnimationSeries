@@ -7,25 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B0B0F18222C1DC0001A4031 /* AnimationSeries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; };
+		2B0B0F19222C1DC0001A4031 /* AnimationSeries.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2B74BAB22219724000480D68 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAB12219724000480D68 /* AppDelegate.swift */; };
 		2B74BAB42219724000480D68 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAB32219724000480D68 /* ViewController.swift */; };
 		2B74BAB72219724000480D68 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B74BAB52219724000480D68 /* Main.storyboard */; };
 		2B74BAB92219724100480D68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B74BAB82219724100480D68 /* Assets.xcassets */; };
 		2B74BABC2219724100480D68 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B74BABA2219724100480D68 /* LaunchScreen.storyboard */; };
-		2B74BAD82219778D00480D68 /* AnimationSeries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; };
-		2B74BAD92219778D00480D68 /* AnimationSeries.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BAD72219778D00480D68 /* AnimationSeries.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2B74BADC22197ABE00480D68 /* AnimListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BADB22197ABE00480D68 /* AnimListItemCell.swift */; };
 		2B74BAE22219D9AC00480D68 /* MyAnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAE12219D9AC00480D68 /* MyAnimationExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2B74BADA2219778D00480D68 /* Embed Frameworks */ = {
+		2B0B0F1A222C1DC0001A4031 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2B74BAD92219778D00480D68 /* AnimationSeries.framework in Embed Frameworks */,
+				2B0B0F19222C1DC0001A4031 /* AnimationSeries.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -50,7 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B74BAD82219778D00480D68 /* AnimationSeries.framework in Frameworks */,
+				2B0B0F18222C1DC0001A4031 /* AnimationSeries.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,7 +99,7 @@
 				2B74BAAA2219724000480D68 /* Sources */,
 				2B74BAAB2219724000480D68 /* Frameworks */,
 				2B74BAAC2219724000480D68 /* Resources */,
-				2B74BADA2219778D00480D68 /* Embed Frameworks */,
+				2B0B0F1A222C1DC0001A4031 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
