@@ -45,8 +45,6 @@ open class RecursionSeries: Recursable {
     fileprivate var first: Recursable?
     
     fileprivate var loopCount: Int = 0
-    fileprivate var totalLoopCount: Int
-    fileprivate var loop: ((Int) -> Void)?
     
     fileprivate var isPaused = false {
         didSet {
@@ -64,7 +62,7 @@ open class RecursionSeries: Recursable {
     
     init(first: Recursable, totalLoopCount: Int = 0) {
         self.first = first
-        self.totalLoopCount = totalLoopCount
+//        self.totalLoopCount = totalLoopCount
     }
     
     public func start() {
@@ -74,7 +72,7 @@ open class RecursionSeries: Recursable {
     public func clear() {
         self.isPaused = true
         self.onNext = nil
-        self.loop = nil
+//        self.loop = nil
     }
 }
 
@@ -95,23 +93,19 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
 
 public func * (series: RecursionSeries, times: Int) -> RecursionSeries {
     let sender = RecursionSeries(first: series, totalLoopCount: times)
-    series.loop = { [weak sender] count in
-        
-        let isLoop1CycleEnd = count % times == 0
-        if isLoop1CycleEnd {
-            // (series end) * totalLoopCount -> exit
-            sender?.onNext?()
-        }else{
-            // series end -> (loop) -> start
-            series.start()
-        }
-    }
-    series.onNext = {
+    
+    series.onNext = { [weak sender, weak series] in
         // series end -> loopCount++ -> loop
-        series.loopCount += 1
-        series.loop?(series.loopCount)
+        series?.loopCount += 1
+        
+        if series?.loopCount ?? times >= times {
+            series?.loopCount = 0
+            sender?.onNext?()
+            
+        }else{
+            series?.start()
+        }
     }
     sender.currentJob = series
     return sender
 }
-
