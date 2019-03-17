@@ -26,24 +26,19 @@ open class AnimationSeries: Recursion {
     
     fileprivate let view: UIView
     
-    var initFunction: (() -> Void)?
-    
-    init(_ view: UIView, params: AnimationParameter, initFunction: (() -> Void)? = nil, _ complete: CompleteCallback?) {
+    init(_ view: UIView, params: AnimationParameter, _ complete: CompleteCallback?) {
         self.view = view
-        self.initFunction = initFunction
         super.init(params: params, complete)
     }
     
     func onEnd() {
         self.onNext?()
         self.onCompleted?(true)
-        self.initFunction?()
     }
     
     override public func clear() {
         super.clear()
         self.view.layer.removeAllAnimations()
-        self.initFunction?()
     }
 }
 

@@ -70,8 +70,8 @@ extension UIView {
     
     
     /// change view rotation angle with flat parameters
-    public func rotate(degree: CGFloat, duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], initFunction: (() -> Void)? = nil, _ complete: CompleteCallback? = nil) -> Recursion {
-        let anim = Rotate(self, params: AnimationParameter(duration, delay: delay, options: options), degree: degree, initFunction: initFunction, complete: complete)
+    public func rotate(degree: CGFloat, duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [],  _ complete: CompleteCallback? = nil) -> Recursion {
+        let anim = Rotate(self, params: AnimationParameter(duration, delay: delay, options: options), degree: degree, complete: complete)
         return anim
     }
     
