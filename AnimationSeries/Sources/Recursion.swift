@@ -15,7 +15,7 @@ public typealias CompleteCallback = (Any) -> Void
 public protocol Parameter {}
 
 
-public protocol Recursable {
+public protocol Recursable: class {
     var onNext: (() -> Void)? { get set }
     func start()
     func clear()
@@ -42,20 +42,27 @@ open class Recursion: Recursable {
 
 open class RecursionSeries: Recursable {
     
-    let first: Recursion
-    let last: Recursion
-    var loopCount: Int = 0
-    var loopCycle: Int
-    var loop: ((Int) -> Void)?
-    fileprivate var waitingJob: (Recursable, Recursable?)?
-    fileprivate var isPaused = false
+    fileprivate let first: Recursable
+    
+    fileprivate var loopCount: Int = 0
+    fileprivate var totalLoopCount: Int
+    fileprivate var loop: ((Int) -> Void)?
+    
+    fileprivate var isPaused = false {
+        didSet {
+            if isPaused {
+                currentJob?.clear()
+            }
+        }
+    }
+    fileprivate weak var currentJob: Recursable?
+    
     public var onNext: (() -> Void)?
     
     
-    init(first: Recursion, last: Recursion, loopCycle: Int = 0) {
+    init(first: Recursable, totalLoopCount: Int = 0) {
         self.first = first
-        self.last = last
-        self.loopCycle = loopCycle
+        self.totalLoopCount = totalLoopCount
     }
     
     public func start() {
@@ -64,98 +71,60 @@ open class RecursionSeries: Recursable {
     
     public func clear() {
         self.isPaused = true
-        waitingJob?.1?.clear(); waitingJob?.1?.onNext = nil
-        waitingJob?.0.clear(); waitingJob?.0.onNext = nil
+        self.onNext = nil
+        self.loop = nil
     }
 }
 
 
 public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
-    switch (previous, next) {
-    case (is Recursion, is Recursion):
-        let previous = previous as! Recursion
-        let next = next as! Recursion
-        let sender = RecursionSeries(first: previous, last: next)
-        next.onNext = {
-            // if second unit is end -> call recursion.next to notify this recursion is end
-            sender.onNext?()
-        }
-        previous.onNext = {
-            // first unit end -> call next uint
-            next.start()
-        }
-        sender.waitingJob = (previous, next)
-        return sender
-        
-    case (is Recursion, is RecursionSeries):
-        let previous = previous as! Recursion
-        let next = next as! RecursionSeries
-        let sender = RecursionSeries(first: previous, last: next.last)
-        next.onNext = {
-            // if second recursion is end -> call recursion.next to notify this recursion is end
-            sender.onNext?()
-        }
-        previous.onNext = {
-            // first unit end -> call next recursion
-            next.start()
-        }
-        sender.waitingJob = (previous, next)
-        return sender
-        
-    case (is RecursionSeries, is Recursion):
-        let previous = previous as! RecursionSeries
-        let next = next as! Recursion
-        let sender = RecursionSeries(first: previous.first, last: next)
-        next.onNext = {
-            sender.onNext?()
-        }
-        previous.onNext = {
-            // first recursion end -> call next unit
-            next.start()
-        }
-        sender.waitingJob = (previous, next)
-        return sender
-        
-    default:
-        let previous = previous as! RecursionSeries
-        let next = next as! RecursionSeries
-        let sender = RecursionSeries(first: previous.first, last: next.last)
-        next.onNext = {
-            sender.onNext?()
-        }
-        previous.onNext = {
-            next.start()
-        }
-        sender.waitingJob = (previous, next)
-        return sender
+    let sender = RecursionSeries(first: previous)
+    next.onNext = {
+        sender.onNext?()
     }
+    previous.onNext = {
+        sender.currentJob = next
+        next.start()
+    }
+    sender.currentJob = previous
+    return sender
+}
+
+public func * (recursion: Recursion, times: Int) -> RecursionSeries {
+    let sender = RecursionSeries(first: recursion, totalLoopCount: times)
+    
+    var count = 0
+    recursion.onNext = {
+        count += 1
+        if count >= times {
+            sender.onNext?()
+        }else{
+            recursion.start()
+        }
+    }
+    return sender
 }
 
 
-public func * (chain: RecursionSeries, times: Int) -> RecursionSeries {
-    let sender = RecursionSeries(first: chain.first, last: chain.last, loopCycle: times)
-    chain.loop = { count in
-        if sender.isPaused {
-            chain.loop = nil
-            chain.onNext = nil
-            chain.clear()
-            return
-        }
+public func * (series: RecursionSeries, times: Int) -> RecursionSeries {
+    let sender = RecursionSeries(first: series.first, totalLoopCount: times)
+    series.loop = { count in
+        
         let isLoop1CycleEnd = count % times == 0
         if isLoop1CycleEnd {
-            // recursion * times end -> exit
+            // (series end) * totalLoopCount -> exit
             sender.onNext?()
         }else{
-            // recursion.end -> recursion.start
-            chain.start()
+            // series end -> (loop) -> start
+            series.start()
         }
     }
-    chain.onNext = {
-        // recursion end -> ++ loopCount
-        chain.loopCount += 1
-        chain.loop?(chain.loopCount)
+    series.onNext = {
+        // series end -> loopCount++ -> loop
+        series.loopCount += 1
+        series.loop?(series.loopCount)
     }
-    sender.waitingJob = (chain, nil)
+    sender.currentJob = series
     return sender
 }
 
