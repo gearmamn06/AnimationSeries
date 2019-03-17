@@ -79,11 +79,11 @@ open class RecursionSeries: Recursable {
 
 public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
     let sender = RecursionSeries(first: previous)
-    next.onNext = {
-        sender.onNext?()
+    next.onNext = { [weak sender] in
+        sender?.onNext?()
     }
-    previous.onNext = {
-        sender.currentJob = next
+    previous.onNext = { [weak sender] in
+        sender?.currentJob = next
         next.start()
     }
     sender.currentJob = previous
@@ -94,10 +94,10 @@ public func * (recursion: Recursion, times: Int) -> RecursionSeries {
     let sender = RecursionSeries(first: recursion, totalLoopCount: times)
     
     var count = 0
-    recursion.onNext = {
+    recursion.onNext = { [weak sender] in
         count += 1
         if count >= times {
-            sender.onNext?()
+            sender?.onNext?()
         }else{
             recursion.start()
         }
@@ -107,13 +107,13 @@ public func * (recursion: Recursion, times: Int) -> RecursionSeries {
 
 
 public func * (series: RecursionSeries, times: Int) -> RecursionSeries {
-    let sender = RecursionSeries(first: series.first, totalLoopCount: times)
-    series.loop = { count in
+    let sender = RecursionSeries(first: series, totalLoopCount: times)
+    series.loop = { [weak sender] count in
         
         let isLoop1CycleEnd = count % times == 0
         if isLoop1CycleEnd {
             // (series end) * totalLoopCount -> exit
-            sender.onNext?()
+            sender?.onNext?()
         }else{
             // series end -> (loop) -> start
             series.start()
