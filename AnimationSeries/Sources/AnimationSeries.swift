@@ -26,19 +26,24 @@ open class AnimationSeries: Recursion {
     
     fileprivate let view: UIView
     
-    init(_ view: UIView, params: AnimationParameter, _ complete: CompleteCallback?) {
+    var initFunction: (() -> Void)?
+    
+    init(_ view: UIView, params: AnimationParameter, initFunction: (() -> Void)? = nil, _ complete: CompleteCallback?) {
         self.view = view
+        self.initFunction = initFunction
         super.init(params: params, complete)
     }
     
     func onEnd() {
         self.onNext?()
         self.onCompleted?(true)
+        self.initFunction?()
     }
     
     override public func clear() {
         super.clear()
         self.view.layer.removeAllAnimations()
+        self.initFunction?()
     }
 }
 
@@ -138,7 +143,7 @@ class Move: AnimationSeries {
 class Rotate: AnimationSeries {
     let radian: CGFloat
     
-    init(_ view: UIView, params: AnimationParameter, degree: CGFloat, complete: CompleteCallback?) {
+    init(_ view: UIView, params: AnimationParameter, degree: CGFloat, initFunction: (() -> Void)? = nil,  complete: CompleteCallback?) {
         self.radian = CGFloat(Measurement<UnitAngle>(value: Double(degree), unit: .degrees).converted(to: .radians).value)
         super.init(view, params: params, complete)
     }
