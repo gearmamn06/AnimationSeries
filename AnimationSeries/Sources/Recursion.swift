@@ -94,16 +94,16 @@ public func + (previous: Recursable, next: Recursable) -> RecursionSeries {
 public func * (series: RecursionSeries, times: Int) -> RecursionSeries {
     let sender = RecursionSeries(first: series, totalLoopCount: times)
     
-    series.onNext = { [weak sender, weak series] in
+    series.onNext = { [weak sender] in
         // series end -> loopCount++ -> loop
-        series?.loopCount += 1
+        series.loopCount += 1
         
-        if series?.loopCount ?? times >= times {
-            series?.loopCount = 0
+        if series.loopCount >= times {
+            series.loopCount = 0
             sender?.onNext?()
             
         }else{
-            series?.start()
+            series.start()
         }
     }
     sender.currentJob = series
