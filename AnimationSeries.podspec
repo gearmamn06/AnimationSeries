@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "AnimationSeries"
-  spec.version      = "1.1.1"
+  spec.version      = "1.1.2"
   spec.summary      = "Easy way to create a chain of animation."
 
 
