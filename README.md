@@ -133,9 +133,10 @@ Calling the start method of a new object starts a series of animations. Similarl
         let anim = animView.sizing(scale: (40, 40), duration: 0) + animView.sizing(scale: (0.6, 0.6), duration: 1.6, { _ in
             print("shrink(single animation) end.")
         }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
-        
-        anim.onNext = {
-            print("Intial animation(animation series) end.")
+
+        anim.onNext = { [weak anim] in
+            print("Intial animation(animation series) end. -> flush RecursionPool")
+            RecursionPool.shared.flush(anim?.key)
         }
         anim.start()
     }
@@ -175,6 +176,37 @@ You can use the clear function to stop the animation.(Additional work is require
         animView.alpha = 1.0
         animView.backgroundColor = .red
     }
+
+```
+
+### Memory Issue
+
+When a RecursionSeries instance is created using the + or * operators, recursable instances participating in the series are kept in static memory to prevent them from making circular references in the series or to prevent them from being released from memory before the operation. <br /><br />
+
+After a single (Recursion) or a series of (RecursionSeries) animations end, it is highly recommended to release from memory as follows.
+
+```swift
+
+    let anim = self.view.disappear(duration: 1, delay: 0.0, options: .curveLinear, {  _ in
+        // When the animation finishes, the completeCallback will be called.
+        print("disappear animation end")
+    })
+
+    // single animation flushing
+    anim.onNext = { [weak anim] in
+        // onNext closure is used to connect with the following animation(recurable) instance.
+        // If no animation is linked behind, you can flush it from the static memory when this closure is called.
+        RecursionPool.shared.flush(anim?.key)
+    }
+
+
+    let series = (self.view.disappear(duration: 1) + self.view.appear(duration: 1)) * 10
+    series.onNext = { [weak series] in
+        // onNext closure of the series is called when the animation ends.
+        // In this case, release the series from the static memory.
+        RecursionPool.shared.flush(series?.key)
+    }
+    series.start()
 
 ```
 
