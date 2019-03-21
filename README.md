@@ -100,7 +100,7 @@ Calling the start function on the associated animation instance starts a series 
 
 ### Single animation
 
-One of the following animations returns a Recursion instance. Calling the start function starts the animation. By registering the onNext callback of the Recursion instance, you can get the end callback of the animation.
+One of the following animations returns a Recursion instance. Call the start function to start the animation. By registering the complete callback of the Recursion instance, you can get the end callback of the animation.
 
 ```swift
 
@@ -122,9 +122,9 @@ One of the following animations returns a Recursion instance. Calling the start 
 
 ### Combine animations
 
-Recursion instances can be combined with other Recursion instances or RecursionSeries instances using the + operator <br />
+Recursion instances can be combined with other Recursion instances or RecursionSeries instances using the + operator. <br />
 Combined instances return a new RecursionSeries. <br />
-Calling the start method of a new object starts a series of animations. Similarly, registering a new object's onNext callback allows you to get a callback that is called after all animation has finished. <br />
+Call the start method of a new instance to start a series of animations. Similarly, registering a new object's onNext callback allows you to get a callback that is called after all animation has finished. <br />
 (If you register a CompleteCallback to a single animation, you can get a callback when it ends.)
 
 ```swift
@@ -149,9 +149,9 @@ Calling the start method of a new object starts a series of animations. Similarl
 RecursionSeries instances can be repeated using the * operator.
 
 ```swift
-    let singleCycle = view.discolor(to: .orange, duration: 1) + view.discolor(to: .yellow, duration: 1) + view.discolor(to: .green, duration: 1) + view.discolor(to: .blue, duration: 1) + view.discolor(to: .purple, duration: 1)
+    let series = view.discolor(to: .orange, duration: 1) + view.discolor(to: .yellow, duration: 1) + view.discolor(to: .green, duration: 1) + view.discolor(to: .blue, duration: 1) + view.discolor(to: .purple, duration: 1)
 
-    let repeating = singleCycle * 10
+    let repeating = series * 10
     repeating.start()
 
 ```
@@ -181,7 +181,7 @@ You can use the clear function to stop the animation.(Additional work is require
 
 ### Memory Issue
 
-When a RecursionSeries instance is created using the + or * operators, recursable instances participating in the series are kept in static memory to prevent them from making circular references in the series or to prevent them from being released from memory before the operation. <br /><br />
+When a RecursionSeries instance is created using the + or * operators, recursable instances participating in the series are kept in static memory to prevent them from making circular references or to prevent them from being released from memory before the operation. <br /><br />
 
 After a single (Recursion) or a series of (RecursionSeries) animations end, it is highly recommended to release from memory as follows.
 
