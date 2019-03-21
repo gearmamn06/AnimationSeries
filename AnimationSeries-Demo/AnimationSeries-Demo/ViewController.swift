@@ -25,6 +25,10 @@ class ViewController: UIViewController {
         startInitialAnim()
         setUpTableView()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        RecursionPool.shared.flush()
+    }
 
 }
 
@@ -51,8 +55,9 @@ extension ViewController {
             print("shrink(single animation) end.")
         }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
 
-        anim.onNext = {
-            print("Intial animation(animation series) end.")
+        anim.onNext = { [weak anim] in
+            print("Intial animation(animation series) end. -> flush RecursionPool")
+            RecursionPool.shared.flush(anim?.key)
         }
         anim.start()
     }
@@ -72,8 +77,9 @@ extension ViewController {
             ary.append((CGPoint(x: ary.count + 10, y: 0), params))
         })
         let anim = animView.move(path: paths)
-        anim?.onNext = {
+        anim?.onNext = { [weak anim] in
             print("moving all end..")
+            RecursionPool.shared.flush(anim?.key)
         }
         anim?.start()
     }
