@@ -180,7 +180,7 @@ You can use the clear function to stop the animation.(Additional work is require
 
 ### Caution
 
-All Recursable(Recursion or RecursionSeries) instances are not restartable after clear is called. (It will probably stop again at the point where it was previously terminated.) <br />
+All Recursable(Recursion or RecursionSeries) instances are not restartable after clear is called.  <br />
 It is also a reference type, so it is not copied.
 
 ```swift
