@@ -56,7 +56,7 @@ extension ViewController {
         }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
 
         anim.onNext = { [weak anim] in
-            print("Intial animation(animation series) end. -> flush RecursionPool")
+            print("Intial animation(animation series) end. -> release point")
             AnimationPool.shared.release(anim)
         }
         anim.start()
