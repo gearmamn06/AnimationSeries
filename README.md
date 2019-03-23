@@ -95,24 +95,23 @@ AnimationSeries was made under the same difficulties as above. With this you can
 
 There are default animations declared in this project at view extension.(.appear, .disappear, .discolor, .move, .rotate, sizing) <br />
 These animation functions could be connected using the + (sequential connection) and * (repetition) operators.
-Calling the start function on the associated animation instance starts a series of animations.
 
 
 ### Single animation
 
-One of the following animations returns a Recursion instance. Call the start function to start the animation. By registering the complete callback of the Recursion instance, you can get the end callback of the animation.
+One of the following animations returns a AnimationSeries instance. Call the start function to start the animation. By setting the complete callback, you can get the end callback of the animation.
 
 ```swift
 
     /// view.alpha -> 1.0 with flat parameters
-    public func appear(duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> Recursion {
+    public func appear(duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> AnimationSeries {
         let anim = Appear(self, params: AnimationParameter(duration, delay: delay, options: options), complete)
         return anim
     }
 
 
     /// view.alpha -> 1.0 with AnimationParameter
-    public func appear(_ params: AnimationParameter, _ complete: CompleteCallback? = nil) -> Recursion {
+    public func appear(_ params: AnimationParameter, _ complete: CompleteCallback? = nil) -> AnimationSeries {
         return self.appear(duration: params.duration, delay: params.delay, options: params.options, complete)
     }
 
@@ -122,10 +121,10 @@ One of the following animations returns a Recursion instance. Call the start fun
 
 ### Combine animations
 
-Recursion instances can be combined with other Recursion instances or RecursionSeries instances using the + operator. <br />
-Combined instances return a new RecursionSeries. <br />
-Call the start method of a new instance to start a series of animations. Similarly, registering a new object's onNext callback allows you to get a callback that is called after all animation has finished. <br />
-(If you register a CompleteCallback to a single animation, you can get a callback when it ends.)
+AnimationSeries instances can be combined with other AnimationSeries instances using the + operator. <br />
+Combined instances return a new AnimationSeries. <br />
+Call the start method of a new instance to start a series of animations. Similarly, setting a new instance's onNext callback allows you to get a callback that is called after all animation has finished. <br />
+(If you set a CompleteCallback to a single AnimationSeries, you can get a callback when it ends.)
 
 ```swift
 
@@ -135,8 +134,8 @@ Call the start method of a new instance to start a series of animations. Similar
         }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
 
         anim.onNext = { [weak anim] in
-            print("Intial animation(animation series) end. -> flush RecursionPool")
-            RecursionPool.shared.flush(anim?.key)
+            print("Intial animation(animation series) end. -> release point")
+            AnimationPool.shared.release(anim)
         }
         anim.start()
     }
@@ -146,7 +145,7 @@ Call the start method of a new instance to start a series of animations. Similar
 
 ### Loop animation
 
-RecursionSeries instances can be repeated using the * operator.
+AnimationSeries instances can be repeated using the * operator.
 
 ```swift
     let series = view.discolor(to: .orange, duration: 1) + view.discolor(to: .yellow, duration: 1) + view.discolor(to: .green, duration: 1) + view.discolor(to: .blue, duration: 1) + view.discolor(to: .purple, duration: 1)
@@ -155,7 +154,6 @@ RecursionSeries instances can be repeated using the * operator.
     repeating.start()
 
 ```
-* Recursion instances are not repeated. 
 
 
 ### Clear Animation
@@ -181,9 +179,10 @@ You can use the clear function to stop the animation.(Additional work is require
 
 ### Memory Issue
 
-When a RecursionSeries instance is created using the + or * operators, recursable instances participating in the series are kept in static memory to prevent them from making circular references or to prevent them from being released from memory before the operation. <br /><br />
+When a AnimationSeries instance is created by using the + or * operators, AnimationSeries instances participating in the series are kept in static memory to prevent them from making circular references or to prevent them from being released from memory before the operation. <br /><br />
 
-After a single (Recursion) or a series of (RecursionSeries) animations end, it is highly recommended to release from memory as follows.
+After an animation end, it is highly recommended to release from memory as follows.
+(AnimationSeries.clear function also do release memory)
 
 ```swift
 
@@ -196,7 +195,7 @@ After a single (Recursion) or a series of (RecursionSeries) animations end, it i
     anim.onNext = { [weak anim] in
         // onNext closure is used to connect with the following animation(recurable) instance.
         // If no animation is linked behind, you can flush it from the static memory when this closure is called.
-        RecursionPool.shared.flush(anim?.key)
+        AnimationPool.shared.release(anim)
     }
 
 
@@ -204,7 +203,7 @@ After a single (Recursion) or a series of (RecursionSeries) animations end, it i
     series.onNext = { [weak series] in
         // onNext closure of the series is called when the animation ends.
         // In this case, release the series from the static memory.
-        RecursionPool.shared.flush(series?.key)
+        AnimationPool.shared.release(anim)
     }
     series.start()
 
@@ -212,7 +211,7 @@ After a single (Recursion) or a series of (RecursionSeries) animations end, it i
 
 ### Caution
 
-All Recursable(Recursion or RecursionSeries) instances are not restartable after clear is called.  <br />
+All AnimationSeries instances are not restartable after clear is called.  <br />
 It is also a reference type, so it is not copied.
 
 ```swift
@@ -239,9 +238,9 @@ You can create a class that inherits AnimationSeries to define the animation you
 
     extension UIView {
         
-        public func move(path: [(CGPoint, AnimationParameter)]) -> RecursionSeries? {
+        public func move(path: [(CGPoint, AnimationParameter)]) -> AnimationSeries? {
             guard !path.isEmpty else { return nil }
-            var sender: RecursionSeries!
+            var sender: AnimationSeries!
             path.forEach { tp in
                 if sender == nil {
                     sender = self.move(position: tp.0, params: tp.1) + self.move(position: tp.0, params: AnimationParameter(0.0))
@@ -264,6 +263,7 @@ You can create a class that inherits AnimationSeries to define the animation you
         let anim = animView.move(path: paths)
         anim?.onNext = {
             print("moving all end..")
+            AnimationPool.shared.release(anim)
         }
         anim?.start()
     }
