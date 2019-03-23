@@ -20,7 +20,7 @@ extension SelfNamable {
 }
 
 extension UIView {
-    func blink(duration: TimeInterval) -> RecursionSeries {
+    func blink(duration: TimeInterval) -> AnimationSeries {
         let anim = disappear(duration: duration) + appear(duration: duration)
         return anim
     }
@@ -65,7 +65,7 @@ enum AnimationExampleType: String, CaseIterable {
         }
     }
     
-    var animate: (UIView) -> [Recursable] {
+    var animate: (UIView) -> [AnimationSeries] {
         switch self {
         case .blink:
             return { view in

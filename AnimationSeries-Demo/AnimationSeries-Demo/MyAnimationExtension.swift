@@ -11,9 +11,9 @@ import AnimationSeries
 
 extension UIView {
     
-    public func move(path: [(CGPoint, AnimationParameter)]) -> RecursionSeries? {
+    public func move(path: [(CGPoint, AnimationParameter)]) -> AnimationSeries? {
         guard !path.isEmpty else { return nil }
-        var sender: RecursionSeries!
+        var sender: AnimationSeries!
         path.forEach { tp in
             if sender == nil {
                 sender = self.move(position: tp.0, params: tp.1) + self.move(position: tp.0, params: AnimationParameter(0.0))

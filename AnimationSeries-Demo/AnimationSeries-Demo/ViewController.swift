@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     private let types = AnimationExampleType.allCases.filter{ $0 != .none }
-    private var currentAnimations = [Recursable]()
+    private var currentAnimations = [AnimationSeries]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        RecursionPool.shared.flush()
+        AnimationPool.shared.release()
     }
 
 }
@@ -57,7 +57,7 @@ extension ViewController {
 
         anim.onNext = { [weak anim] in
             print("Intial animation(animation series) end. -> flush RecursionPool")
-            RecursionPool.shared.flush(anim?.key)
+            AnimationPool.shared.release(anim)
         }
         anim.start()
     }
@@ -79,7 +79,7 @@ extension ViewController {
         let anim = animView.move(path: paths)
         anim?.onNext = { [weak anim] in
             print("moving all end..")
-            RecursionPool.shared.flush(anim?.key)
+            AnimationPool.shared.release(anim)
         }
         anim?.start()
     }

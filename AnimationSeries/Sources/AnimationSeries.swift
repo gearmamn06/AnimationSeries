@@ -1,184 +1,204 @@
 //
-//  AnimationSeries.swift
+//  Recursion.swift
 //  AnimationSeries
 //
 //  Created by ParkHyunsoo on 17/02/2019.
 //  Copyright © 2019 ParkHyunsoo. All rights reserved.
 //
 
-import UIKit
+import Foundation
+
+import Foundation
 
 
-public struct AnimationParameter: Parameter {
-    internal let duration: TimeInterval
-    internal let delay: TimeInterval
-    internal let options: UIView.AnimationOptions
-    
-    public init(_ duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = []) {
-        self.duration = duration
-        self.delay = delay
-        self.options = options
-    }
-}
+public typealias CompleteCallback = (Any) -> Void
+public protocol Parameter {}
 
 
-open class AnimationSeries: Recursion {
-    
-    fileprivate let view: UIView
-    
-    init(_ view: UIView, params: AnimationParameter, _ complete: CompleteCallback?) {
-        self.view = view
-        super.init(params: params, complete)
-    }
-    
-    func onEnd() {
-        self.onNext?()
-        self.onCompleted?(true)
-    }
-    
-    override public func clear() {
-        super.clear()
-        self.view.layer.removeAllAnimations()
-    }
-}
-
-
-/// appear view: view.alpha -> 1.0
-class Appear: AnimationSeries {
-    
-    override func start() {
-        guard let params = self.params as? AnimationParameter else {
-            onNext?()
-            onCompleted?(true)
-            return
+extension String {
+    static var ranKey: (Int) -> String {
+        return { len in
+            let pool = "abcdefghijklmnopABCDEFGHIJKLMNOP1234567890".map{ $0 }
+            return String((0..<len).map{ _ in pool[Int.random(in: 0..<pool.count)] })
         }
-        UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
-            self.view.alpha = 1.0
-        }, completion: { end in
-            if end {
-                self.onEnd()
-            }
-        })
+    }
+}
+
+public protocol AnimationSeries: class {
+    var onNext: (() -> Void)? { get set }
+    func start()
+    func clear()
+    var key: String { get set }
+}
+
+
+open class SingleAnimation: AnimationSeries {
+    
+    public var key: String  = String.ranKey(10) {
+        didSet {
+            AnimationPool.shared.key(changed: key, from: oldValue)
+        }
+    }
+    let params: Parameter
+    var onCompleted: CompleteCallback?
+    public var onNext: (() -> Void)?
+    
+    init(params: Parameter, _ complete: CompleteCallback? = nil) {
+        self.params = params
+        self.onCompleted = complete
+    }
+    
+    public func start() {}
+    
+    public func clear() {
+        self.onNext = nil
+        AnimationPool.shared.release(self)
     }
 }
 
 
-/// disappear view: view.alpha -> 0.0
-class Disappear: AnimationSeries {
+open class ChainAnimation: AnimationSeries {
     
-    override func start() {
-        guard let params = self.params as? AnimationParameter else {
-            onEnd()
-            return
+    public var key: String = String.ranKey(10) {
+        didSet {
+            AnimationPool.shared.key(changed: key, from: oldValue)
         }
-        UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
-            self.view.alpha = 0.0
-        }, completion: { end in
-            if end {
-                self.onEnd()
+    }
+    
+    fileprivate var first: AnimationSeries?
+    
+    fileprivate var loopCount: Int = 0
+    
+    fileprivate var isPaused = false {
+        didSet {
+            if isPaused {
+                first = nil
+                currentJob?.clear()
+                currentJob = nil
             }
-        })
+        }
+    }
+    fileprivate weak var currentJob: AnimationSeries?
+    
+    public var onNext: (() -> Void)? = {  }
+    
+    init(first: AnimationSeries, totalLoopCount: Int = 0) {
+        self.first = first
+    }
+    
+    public func start() {
+        first?.start()
+    }
+    
+    public func clear() {
+        self.isPaused = true
+        self.onNext = nil
+        AnimationPool.shared.release(self)
+    }
+}
+
+public class AnimationPool {
+    
+    private init() {}
+    public static let shared: AnimationPool = AnimationPool()
+    
+    private var references = [String: Any]()
+    private var seriesReferences = [String: ChainAnimation]()
+    
+    fileprivate func append(series: ChainAnimation, recursions: AnimationSeries...) {
+        var ary = references[series.key] as? [AnimationSeries] ?? [AnimationSeries]()
+        recursions.forEach{ ary.append($0) }
+        seriesReferences[series.key] = series
+        references[series.key] = ary
+    }
+    
+    fileprivate func key(changed to: String, from: String) {
+        seriesReferences[to] = seriesReferences[from]
+        seriesReferences[to] = nil
+        guard let ary = references[from] else { return }
+        references[to] = ary
+    }
+    
+    
+    public func release(_ series: AnimationSeries?) {
+        release(series?.key)
+    }
+    
+    private func release(_ key: String?) {
+        guard let key = key else { return }
+        seriesReferences[key] = nil
+        guard var ary = self.references[key] as? [AnimationSeries] else { return }
+        let keys = ary.map{ $0.key }
+        references[key] = nil; ary.removeAll()
+        keys.forEach{ release($0) }
+    }
+    
+    public func release() {
+        seriesReferences.removeAll()
+        let keys = references.keys
+        keys.forEach(release(_:))
     }
 }
 
 
-/// change view color: view.backgroundColor -> custom color
-class Discolor: AnimationSeries {
-    
-    let color: UIColor
-    
-    init(_ view: UIView, params: AnimationParameter, color: UIColor, complete: CompleteCallback?) {
-        self.color = color
-        super.init(view, params: params, complete)
+public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSeries {
+    let sender = ChainAnimation(first: previous)
+    AnimationPool.shared.append(series: sender, recursions: previous, next)
+    next.onNext = { [weak sender] in
+        sender?.onNext?()
     }
-    
-    override func start() {
-        guard let params = params as? AnimationParameter else {
-            onEnd()
-            return
-        }
-        UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
-            self.view.backgroundColor = self.color
-        }, completion: { end in
-            if end {
-                self.onEnd()
-            }
-        })
+    previous.onNext = { [weak sender, weak next] in
+        sender?.currentJob = next
+        next?.start()
+    }
+    sender.currentJob = previous
+    return sender
+}
+
+public func * (anim: AnimationSeries, times: Int) -> AnimationSeries {
+    if let single = anim as? SingleAnimation {
+        return single * times
+    }else if let chain = anim as? ChainAnimation {
+        return chain * times
+    }else{
+        return anim
     }
 }
 
 
-/// change view position
-class Move: AnimationSeries {
-    let destination: CGPoint
-    
-    init(_ view: UIView, params: AnimationParameter, destination: CGPoint, complete: CompleteCallback?) {
-        self.destination = destination
-        super.init(view, params: params, complete)
-    }
-    
-    override func start() {
-        guard let params = params as? AnimationParameter else {
-            self.onEnd()
-            return
+private func * (single: SingleAnimation, times: Int) -> AnimationSeries {
+    let sender = ChainAnimation(first: single, totalLoopCount: times)
+    AnimationPool.shared.append(series: sender, recursions: single)
+    var count = 0
+    single.onNext = { [weak single, weak sender] in
+        count += 1
+
+        if count > times {
+            sender?.onNext?()
+        }else{
+            single?.start()
         }
-        UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
-            let transform = self.view.transform.concatenating(CGAffineTransform(translationX: self.destination.x, y: self.destination.y))
-            self.view.transform = transform
-        }, completion: { end in
-            if end {
-                self.onEnd()
-            }
-        })
     }
+    sender.currentJob = single
+    return sender
 }
 
-
-/// change view rotation angle
-class Rotate: AnimationSeries {
-    let radian: CGFloat
+private func * (series: ChainAnimation, times: Int) -> AnimationSeries {
+    let sender = ChainAnimation(first: series, totalLoopCount: times)
+    AnimationPool.shared.append(series: sender, recursions: series)
     
-    init(_ view: UIView, params: AnimationParameter, degree: CGFloat, initFunction: (() -> Void)? = nil,  complete: CompleteCallback?) {
-        self.radian = CGFloat(Measurement<UnitAngle>(value: Double(degree), unit: .degrees).converted(to: .radians).value)
-        super.init(view, params: params, complete)
-    }
-    
-    
-    override func start() {
-        guard let params = params as? AnimationParameter else {
-            self.onEnd()
-            return
+    series.onNext = { [weak series, weak sender] in
+        // series end -> loopCount++ -> loop
+        series?.loopCount += 1
+        
+        if series?.loopCount ?? times >= times {
+            series?.loopCount = 0
+            sender?.onNext?()
+            
+        }else{
+            series?.start()
         }
-        UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
-            self.view.transform = CGAffineTransform(rotationAngle: self.radian)
-        }, completion: { end in
-            if end {
-                self.onEnd()
-            }
-        })
     }
-}
-
-
-/// change view scale
-class Sizing: AnimationSeries {
-    let scale: (CGFloat, CGFloat)
-    init(_ view: UIView, params: AnimationParameter, scale: (CGFloat, CGFloat), _ complete: CompleteCallback?) {
-        self.scale = scale
-        super.init(view, params: params, complete)
-    }
-    
-    override func start() {
-        guard let params = self.params as? AnimationParameter else {
-            onEnd()
-            return
-        }
-        UIView.animate(withDuration: params.duration, delay: params.delay, options: params.options, animations: {
-            self.view.transform = CGAffineTransform(scaleX: self.scale.0, y: self.scale.1)
-        }, completion: { end in
-            if end {
-                self.onEnd()
-            }
-        })
-    }
+    sender.currentJob = series
+    return sender
 }
