@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 
 public typealias CompleteCallback = (Any) -> Void
 public protocol Parameter {}
@@ -97,53 +95,54 @@ open class ChainAnimation: AnimationSeries {
     }
 }
 
-public class AnimationPool {
-    
-    private init() {}
-    public static let shared: AnimationPool = AnimationPool()
-    
-    private var references = [String: Any]()
-    private var seriesReferences = [String: ChainAnimation]()
-    
-    fileprivate func append(series: ChainAnimation, recursions: AnimationSeries...) {
-        var ary = references[series.key] as? [AnimationSeries] ?? [AnimationSeries]()
-        recursions.forEach{ ary.append($0) }
-        seriesReferences[series.key] = series
-        references[series.key] = ary
-    }
-    
-    fileprivate func key(changed to: String, from: String) {
-        seriesReferences[to] = seriesReferences[from]
-        seriesReferences[to] = nil
-        guard let ary = references[from] else { return }
-        references[to] = ary
-    }
-    
-    
-    public func release(_ series: AnimationSeries?) {
-        release(series?.key)
-    }
-    
-    private func release(_ key: String?) {
-        guard let key = key else { return }
-        seriesReferences[key] = nil
-        guard var ary = self.references[key] as? [AnimationSeries] else { return }
-        let keys = ary.map{ $0.key }
-        references[key] = nil; ary.removeAll()
-        keys.forEach{ release($0) }
-    }
-    
-    public func release() {
-        seriesReferences.removeAll()
-        let keys = references.keys
-        keys.forEach(release(_:))
-    }
-}
 
+open class ParallelAnimation: AnimationSeries {
+    
+    private var series: [AnimationSeries] = []
+    
+    private var endCount = 0
+    
+    init(series: AnimationSeries...) {
+        self.series = series
+        
+        series.forEach{
+            $0.onNext = self.animationEndBlock
+        }
+    }
+    
+    private func animationEndBlock() {
+        guard !series.isEmpty else { return }
+        endCount += 1
+        if endCount % series.count == 0 {
+            self.onNext?()
+        }
+    }
+    
+    public var onNext: (() -> Void)?
+    
+    public func start() {
+        series.forEach{
+            $0.start()
+        }
+    }
+    
+    public func clear() {
+        onNext = nil
+        AnimationPool.shared.release(self)
+    }
+    
+    public var key: String = String.ranKey(10) {
+        didSet {
+            AnimationPool.shared.key(changed: key, from: oldValue)
+        }
+    }
+    
+    
+}
 
 public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSeries {
     let sender = ChainAnimation(first: previous)
-    AnimationPool.shared.append(series: sender, recursions: previous, next)
+    AnimationPool.shared.append(holder: sender, components: previous, next)
     next.onNext = { [weak sender] in
         sender?.onNext?()
     }
@@ -155,12 +154,22 @@ public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSer
     return sender
 }
 
+
+public func | (left: AnimationSeries, right: AnimationSeries) -> AnimationSeries {
+    let sender = ParallelAnimation(series: left, right)
+    AnimationPool.shared.append(holder: sender, components: left, right)
+    return sender
+}
+
 public func * (anim: AnimationSeries, times: Int) -> AnimationSeries {
     if let single = anim as? SingleAnimation {
         return single * times
     }else if let chain = anim as? ChainAnimation {
         return chain * times
-    }else{
+    }else if let parall = anim as? ParallelAnimation {
+        return parall * times
+    }
+    else{
         return anim
     }
 }
@@ -168,12 +177,13 @@ public func * (anim: AnimationSeries, times: Int) -> AnimationSeries {
 
 private func * (single: SingleAnimation, times: Int) -> AnimationSeries {
     let sender = ChainAnimation(first: single, totalLoopCount: times)
-    AnimationPool.shared.append(series: sender, recursions: single)
+    AnimationPool.shared.append(holder: sender, components: single)
     var count = 0
     single.onNext = { [weak single, weak sender] in
         count += 1
 
         if count > times {
+            count = 0
             sender?.onNext?()
         }else{
             single?.start()
@@ -183,9 +193,27 @@ private func * (single: SingleAnimation, times: Int) -> AnimationSeries {
     return sender
 }
 
+private func * (parall: ParallelAnimation, times: Int) -> AnimationSeries {
+    let sender = ChainAnimation(first: parall, totalLoopCount: times)
+    AnimationPool.shared.append(holder: sender, components: parall)
+    var count = 0
+    parall.onNext = { [weak parall, weak sender] in
+        count += 1
+        
+        if count > times {
+            count = 0
+            sender?.onNext?()
+        }else{
+            parall?.start()
+        }
+    }
+    sender.currentJob = parall
+    return sender
+}
+
 private func * (series: ChainAnimation, times: Int) -> AnimationSeries {
     let sender = ChainAnimation(first: series, totalLoopCount: times)
-    AnimationPool.shared.append(series: sender, recursions: series)
+    AnimationPool.shared.append(holder: sender, components: series)
     
     series.onNext = { [weak series, weak sender] in
         // series end -> loopCount++ -> loop

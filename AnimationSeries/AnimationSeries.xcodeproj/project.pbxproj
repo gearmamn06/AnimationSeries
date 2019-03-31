@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2B3DF19B22508A4B007A2197 /* AnimationPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3DF19A22508A4B007A2197 /* AnimationPool.swift */; };
 		2B74BA9F2219720B00480D68 /* AnimationSeries.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B74BA9D2219720B00480D68 /* AnimationSeries.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2B74BAC7221973DB00480D68 /* UIView_AnimationSeries+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */; };
 		2B74BAC8221973DB00480D68 /* AnimationSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC5221973DB00480D68 /* AnimationSeries.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B3DF19A22508A4B007A2197 /* AnimationPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationPool.swift; sourceTree = "<group>"; };
 		2B74BA9A2219720B00480D68 /* AnimationSeries.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AnimationSeries.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B74BA9D2219720B00480D68 /* AnimationSeries.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationSeries.h; sourceTree = "<group>"; };
 		2B74BA9E2219720B00480D68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -68,12 +70,13 @@
 		2B74BA9C2219720B00480D68 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				2B74BAC5221973DB00480D68 /* AnimationSeries.swift */,
+				2B74BA9D2219720B00480D68 /* AnimationSeries.h */,
+				2B74BA9E2219720B00480D68 /* Info.plist */,
 				2BD1D2E72245D7CA00D3F074 /* AnimationParameter.swift */,
 				2B74BADF2219B80100480D68 /* ViewAnimation.swift */,
 				2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */,
-				2B74BA9D2219720B00480D68 /* AnimationSeries.h */,
-				2B74BA9E2219720B00480D68 /* Info.plist */,
+				2B74BAC5221973DB00480D68 /* AnimationSeries.swift */,
+				2B3DF19A22508A4B007A2197 /* AnimationPool.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BD1D2E82245D7CA00D3F074 /* AnimationParameter.swift in Sources */,
+				2B3DF19B22508A4B007A2197 /* AnimationPool.swift in Sources */,
 				2B74BAC8221973DB00480D68 /* AnimationSeries.swift in Sources */,
 				2B74BAE02219B80100480D68 /* ViewAnimation.swift in Sources */,
 				2B74BAC7221973DB00480D68 /* UIView_AnimationSeries+Extension.swift in Sources */,
@@ -350,7 +354,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -376,7 +380,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = gearmamn06.AnimationSeries;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

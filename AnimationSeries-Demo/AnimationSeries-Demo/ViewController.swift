@@ -15,8 +15,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var animView: UIView!
     @IBOutlet weak var tableView: UITableView!
 
-    private let types = AnimationExampleType.allCases.filter{ $0 != .none }
-    private var currentAnimations = [AnimationSeries]()
+    private let types = AnimationExampleType.allCases
+    private var currentAnimations: AnimationSeries?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
 extension ViewController {
     
     private func clearCurrentAnimation() {
-        self.currentAnimations.forEach{ $0.clear() }
+        self.currentAnimations?.clear()
         self.initializeView()
     }
     
@@ -114,7 +114,10 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         
         clearCurrentAnimation()
         currentAnimations = cell.type.animate(self.animView)
-        currentAnimations.forEach { $0.start() }
+        currentAnimations?.onNext = { [weak self] in
+            AnimationPool.shared.release(self?.currentAnimations)
+        }
+        currentAnimations?.start()
     }
 }
 

@@ -29,7 +29,6 @@ extension UIView {
 //typealias Animation = (UIView)
 
 enum AnimationExampleType: String, CaseIterable {
-    case none = ""
     case blink = "Blink"
     case color = "Color changing"
     case translate = "Move Position"
@@ -65,52 +64,48 @@ enum AnimationExampleType: String, CaseIterable {
         }
     }
     
-    var animate: (UIView) -> [AnimationSeries] {
+    var animate: (UIView) -> AnimationSeries {
         switch self {
         case .blink:
             return { view in
                 let anim = view.blink(duration: 0.1) * 6 + view.blink(duration: 0.05) * 12 + view.blink(duration: 0.2) * 3
-                return  [anim * 3]
+                return  anim * 3
             }
             
         case .color:
             return { view in
                 let anim = view.discolor(to: .orange, duration: 1) + view.discolor(to: .yellow, duration: 1) + view.discolor(to: .green, duration: 1) + view.discolor(to: .blue, duration: 1) + view.discolor(to: .purple, duration: 1)
-                return [anim * 3]
+                return anim * 3
             }
             
         case .translate:
             return { view in
                 let len = view.frame.width * 2
                 let anim = view.move(position: CGPoint(x: 0, y: len), duration: 0.5) + view.move(position: CGPoint(x: len, y: 0), duration: 0.5) + view.move(position: CGPoint(x: 0, y: -len), duration: 0.5) + view.move(position: CGPoint(x: -len, y: 0), duration: 0.5) + view.move(position: .zero, duration: 1)
-                return [anim * 3]
+                return anim * 3
             }
             
         case .sizing:
             return  { view in
                 let anim = view.sizing(scale: (1.5, 1.5), duration: 0.2) + view.sizing(scale: (0.7, 0.7), duration: 0.3) + view.sizing(scale: (2.2, 2.2), duration: 0.5) + view.sizing(scale: (0.1, 0.1), duration: 0.3) + view.sizing(scale: (1.0, 1.0), duration: 1)
-                return [anim * 3]
+                return anim * 3
             }
             
         case .rotate:
             return { view in
                 let anim = view.rotate(degree: -30, duration: 0.2) + view.rotate(degree: 30, duration: 0.2) + view.rotate(degree: -90, duration: 0.18) + view.rotate(degree: 90, duration: 0.18) + view.rotate(degree: 0, duration: 0.5)
-                return [anim * 3]
+                return anim * 3
             }
             
         case .all:
             return { view in
-                return [AnimationExampleType.blink.animate(view), AnimationExampleType.color.animate(view), AnimationExampleType.translate.animate(view), AnimationExampleType.sizing.animate(view), AnimationExampleType.rotate.animate(view)].flatMap{ $0 }
+                return AnimationExampleType.blink.animate(view) | AnimationExampleType.color.animate(view) | AnimationExampleType.translate.animate(view) | AnimationExampleType.sizing.animate(view) | AnimationExampleType.rotate.animate(view)
             }
             
         case .serial:
             return { view in
-                return [AnimationExampleType.blink.animate(view).first! + AnimationExampleType.color.animate(view).first! + AnimationExampleType.translate.animate(view).first! + AnimationExampleType.sizing.animate(view).first! + AnimationExampleType.rotate.animate(view).first!]
+                return AnimationExampleType.blink.animate(view) + AnimationExampleType.color.animate(view) + AnimationExampleType.translate.animate(view) + AnimationExampleType.sizing.animate(view) + AnimationExampleType.rotate.animate(view)
                 
-            }
-        case .none:
-            return { view in
-                return []
             }
         }
     }
@@ -120,7 +115,7 @@ enum AnimationExampleType: String, CaseIterable {
 
 class AnimListItemCell: UITableViewCell, SelfNamable {
     
-    var type: AnimationExampleType = .none {
+    var type: AnimationExampleType! {
         didSet {
             self.textLabel?.text = type.rawValue
             self.detailTextLabel?.text = type.detai
