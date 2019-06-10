@@ -103,18 +103,17 @@ One of the following animations returns a AnimationSeries instance. Call the sta
 
 ```swift
 
-    /// view.alpha -> 1.0 with flat parameters
-    public func appear(duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete: CompleteCallback? = nil) -> AnimationSeries {
-        let anim = Appear(self, params: AnimationParameter(duration, delay: delay, options: options), complete)
+/// view.alpha -> 1.0 with flat parameters
+    public func appear(duration: TimeInterval, delay: TimeInterval = 0.0, options: UIView.AnimationOptions = [], _ complete:   CompleteCallback? = nil) -> AnimationSeries {
+        let anim = Appear(self, params:  ViewAnimation.Parameter(duration, delay: delay, options: options), complete)
         return anim
     }
-
-
+    
+    
     /// view.alpha -> 1.0 with AnimationParameter
-    public func appear(_ params: AnimationParameter, _ complete: CompleteCallback? = nil) -> AnimationSeries {
+    public func appear(_ params:  ViewAnimation.Parameter, _ complete: CompleteCallback? = nil) -> AnimationSeries {
         return self.appear(duration: params.duration, delay: params.delay, options: params.options, complete)
     }
-
 ```
 (AnimationParameter is a struct that contains time, delay, and options.)
 
@@ -123,7 +122,7 @@ One of the following animations returns a AnimationSeries instance. Call the sta
 
 AnimationSeries instances can be combined with other AnimationSeries instances using the + operator. <br />
 Combined instances return a new AnimationSeries. <br />
-Call the start method of a new instance to start a series of animations. Similarly, setting a new instance's onNext callback allows you to get a callback that is called after all animation has finished. <br />
+Call the start method of a new instance to start a series of animations. Similarly, setting a new instance's animationDidFinish callback allows you to get a callback that is called after all animation has finished. <br />
 (If you set a CompleteCallback to a single AnimationSeries, you can get a callback when it ends.)
 
 ```swift
@@ -133,7 +132,7 @@ Call the start method of a new instance to start a series of animations. Similar
             print("shrink(single animation) end.")
         }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
 
-        anim.onNext = { [weak anim] in
+        anim.animationDidFinish = { [weak anim] in
             print("Intial animation(animation series) end. -> release point")
             AnimationPool.shared.release(anim)
         }
@@ -199,16 +198,16 @@ After an animation end, it is highly recommended to release from memory as follo
     })
 
     // single animation flushing
-    anim.onNext = { [weak anim] in
-        // onNext closure is used to connect with the following animation(recurable) instance.
+    anim.animationDidFinish = { [weak anim] in
+        // animationDidFinish closure is used to connect with the following animation(recurable) instance.
         // If no animation is linked behind, you can flush it from the static memory when this closure is called.
         AnimationPool.shared.release(anim)
     }
 
 
     let series = (self.view.disappear(duration: 1) + self.view.appear(duration: 1)) * 10
-    series.onNext = { [weak series] in
-        // onNext closure of the series is called when the animation ends.
+    series.animationDidFinish = { [weak series] in
+        // animationDidFinish closure of the series is called when the animation ends.
         // In this case, release the series from the static memory.
         AnimationPool.shared.release(anim)
     }
@@ -245,12 +244,12 @@ You can create a class that inherits AnimationSeries to define the animation you
 
     extension UIView {
         
-        public func move(path: [(CGPoint, AnimationParameter)]) -> AnimationSeries? {
+        public func move(path: [(CGPoint, ViewAnimation.Parameter)]) -> AnimationSeries? {
             guard !path.isEmpty else { return nil }
             var sender: AnimationSeries!
             path.forEach { tp in
                 if sender == nil {
-                    sender = self.move(position: tp.0, params: tp.1) + self.move(position: tp.0, params: AnimationParameter(0.0))
+                sender = self.move(position: tp.0, params: tp.1) + self.move(position: tp.0, params: ViewAnimation.Parameter(0.0))
                 }else{
                     sender = sender + self.move(position: tp.0, params: tp.1)
                 }
@@ -263,12 +262,12 @@ You can create a class that inherits AnimationSeries to define the animation you
     ....
 
     private func customMoveAnimation() {
-        let params = AnimationParameter(0.2)
-        let paths = (0..<10).reduce(into: [(CGPoint, AnimationParameter)](), { ary, n in
+        let params = ViewAnimation.Parameter(0.2)
+        let paths = (0..<10).reduce(into: [(CGPoint, ViewAnimation.Parameter)](), { ary, n in
             ary.append((CGPoint(x: ary.count + 10, y: 0), params))
         })
         let anim = animView.move(path: paths)
-        anim?.onNext = {
+        anim?.animationDidFinish = { [weak anim] in
             print("moving all end..")
             AnimationPool.shared.release(anim)
         }
