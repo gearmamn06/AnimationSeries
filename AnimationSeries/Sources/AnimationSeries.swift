@@ -9,18 +9,12 @@
 import Foundation
 
 
-public typealias CompleteCallback = (Any) -> Void
-public protocol Parameter {}
+public typealias CompleteCallback = (Bool) -> Void
 
 
-extension String {
-    static var ranKey: (Int) -> String {
-        return { len in
-            let pool = "abcdefghijklmnopABCDEFGHIJKLMNOP1234567890".map{ $0 }
-            return String((0..<len).map{ _ in pool[Int.random(in: 0..<pool.count)] })
-        }
-    }
-}
+
+// MARK: AnimationSeries protocol
+
 
 public protocol AnimationSeries: class {
     var onNext: (() -> Void)? { get set }
@@ -29,33 +23,29 @@ public protocol AnimationSeries: class {
     var key: String { get set }
 }
 
+// MARK: AnimationSeries clear method default implementation
 
-open class SingleAnimation: AnimationSeries {
+public extension AnimationSeries {
     
-    public var key: String  = String.ranKey(10) {
-        didSet {
-            AnimationPool.shared.key(changed: key, from: oldValue)
-        }
-    }
-    let params: Parameter
-    var onCompleted: CompleteCallback?
-    public var onNext: (() -> Void)?
-    
-    init(params: Parameter, _ complete: CompleteCallback? = nil) {
-        self.params = params
-        self.onCompleted = complete
-    }
-    
-    public func start() {}
-    
-    public func clear() {
-        self.onNext = nil
+    func clear() {
+        onNext = nil
         AnimationPool.shared.release(self)
     }
 }
 
 
-open class ChainAnimation: AnimationSeries {
+
+
+// MARK: AnimationAtom for represent single animation
+fileprivate protocol AnimationAtom: AnimationSeries {}
+
+
+
+// MARK: AnimationCombine
+
+
+/// concrete implementation of AnimationSeries
+fileprivate class AnimationCombine: AnimationSeries {
     
     public var key: String = String.ranKey(10) {
         didSet {
@@ -96,7 +86,9 @@ open class ChainAnimation: AnimationSeries {
 }
 
 
-open class ParallelAnimation: AnimationSeries {
+
+
+fileprivate class ParallelAnimation: AnimationSeries {
     
     private var series: [AnimationSeries] = []
     
@@ -141,7 +133,7 @@ open class ParallelAnimation: AnimationSeries {
 }
 
 public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSeries {
-    let sender = ChainAnimation(first: previous)
+    let sender = AnimationCombine(first: previous)
     AnimationPool.shared.append(holder: sender, components: previous, next)
     next.onNext = { [weak sender] in
         sender?.onNext?()
@@ -162,9 +154,9 @@ public func | (left: AnimationSeries, right: AnimationSeries) -> AnimationSeries
 }
 
 public func * (anim: AnimationSeries, times: Int) -> AnimationSeries {
-    if let single = anim as? SingleAnimation {
+    if let single = anim as? AnimationAtom {
         return single * times
-    }else if let chain = anim as? ChainAnimation {
+    }else if let chain = anim as? AnimationCombine {
         return chain * times
     }else if let parall = anim as? ParallelAnimation {
         return parall * times
@@ -175,8 +167,8 @@ public func * (anim: AnimationSeries, times: Int) -> AnimationSeries {
 }
 
 
-private func * (single: SingleAnimation, times: Int) -> AnimationSeries {
-    let sender = ChainAnimation(first: single, totalLoopCount: times)
+private func * (single: AnimationAtom, times: Int) -> AnimationSeries {
+    let sender = AnimationCombine(first: single, totalLoopCount: times)
     AnimationPool.shared.append(holder: sender, components: single)
     var count = 0
     single.onNext = { [weak single, weak sender] in
@@ -194,7 +186,7 @@ private func * (single: SingleAnimation, times: Int) -> AnimationSeries {
 }
 
 private func * (parall: ParallelAnimation, times: Int) -> AnimationSeries {
-    let sender = ChainAnimation(first: parall, totalLoopCount: times)
+    let sender = AnimationCombine(first: parall, totalLoopCount: times)
     AnimationPool.shared.append(holder: sender, components: parall)
     var count = 0
     parall.onNext = { [weak parall, weak sender] in
@@ -211,8 +203,8 @@ private func * (parall: ParallelAnimation, times: Int) -> AnimationSeries {
     return sender
 }
 
-private func * (series: ChainAnimation, times: Int) -> AnimationSeries {
-    let sender = ChainAnimation(first: series, totalLoopCount: times)
+private func * (series: AnimationCombine, times: Int) -> AnimationSeries {
+    let sender = AnimationCombine(first: series, totalLoopCount: times)
     AnimationPool.shared.append(holder: sender, components: series)
     
     series.onNext = { [weak series, weak sender] in
@@ -229,4 +221,19 @@ private func * (series: ChainAnimation, times: Int) -> AnimationSeries {
     }
     sender.currentJob = series
     return sender
+}
+
+
+
+
+// MARK: Utils
+
+
+extension String {
+    static var ranKey: (Int) -> String {
+        return { len in
+            let pool = "abcdefghijklmnopABCDEFGHIJKLMNOP1234567890".map{ $0 }
+            return String((0..<len).map{ _ in pool[Int.random(in: 0..<pool.count)] })
+        }
+    }
 }

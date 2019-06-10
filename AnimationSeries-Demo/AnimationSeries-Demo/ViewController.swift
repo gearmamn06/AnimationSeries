@@ -72,8 +72,8 @@ extension ViewController {
     
     
     private func customMoveAnimation() {
-        let params = AnimationParameter(0.2)
-        let paths = (0..<10).reduce(into: [(CGPoint, AnimationParameter)](), { ary, n in
+        let params = ViewAnimation.Parameter(0.2)
+        let paths = (0..<10).reduce(into: [(CGPoint, ViewAnimation.Parameter)](), { ary, n in
             ary.append((CGPoint(x: ary.count + 10, y: 0), params))
         })
         let anim = animView.move(path: paths)
