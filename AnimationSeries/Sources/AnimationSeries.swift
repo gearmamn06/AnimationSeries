@@ -9,53 +9,49 @@
 import Foundation
 
 
-public typealias CompleteCallback = (Any) -> Void
-public protocol Parameter {}
+public typealias CompleteCallback = (Bool) -> Void
 
 
-extension String {
-    static var ranKey: (Int) -> String {
-        return { len in
-            let pool = "abcdefghijklmnopABCDEFGHIJKLMNOP1234567890".map{ $0 }
-            return String((0..<len).map{ _ in pool[Int.random(in: 0..<pool.count)] })
-        }
-    }
-}
+
+// MARK: AnimationSeries protocol
+
 
 public protocol AnimationSeries: class {
     var onNext: (() -> Void)? { get set }
     func start()
     func clear()
     var key: String { get set }
+    var animationDidFinish: (() -> Void)? { get set }
 }
 
 
-open class SingleAnimation: AnimationSeries {
+// MARK: AnimationSeries clear method default implementation
+
+public extension AnimationSeries {
     
-    public var key: String  = String.ranKey(10) {
-        didSet {
-            AnimationPool.shared.key(changed: key, from: oldValue)
-        }
-    }
-    let params: Parameter
-    var onCompleted: CompleteCallback?
-    public var onNext: (() -> Void)?
-    
-    init(params: Parameter, _ complete: CompleteCallback? = nil) {
-        self.params = params
-        self.onCompleted = complete
-    }
-    
-    public func start() {}
-    
-    public func clear() {
-        self.onNext = nil
+    func clear() {
+        onNext = nil
         AnimationPool.shared.release(self)
     }
 }
 
 
-open class ChainAnimation: AnimationSeries {
+
+
+// MARK: AnimationSeries traits
+
+
+
+// MARK: AnimationAtom for represent single animation
+fileprivate protocol AnimationAtom: AnimationSeries {}
+
+
+
+// MARK: AnimationCombine
+
+
+/// concrete implementation of AnimationSeries for serial operation
+fileprivate class AnimationCombine: AnimationSeries {
     
     public var key: String = String.ranKey(10) {
         didSet {
@@ -63,24 +59,13 @@ open class ChainAnimation: AnimationSeries {
         }
     }
     
+    public var onNext: (() -> Void)?
+    public var animationDidFinish: (() -> Void)?
+    
     fileprivate var first: AnimationSeries?
-    
-    fileprivate var loopCount: Int = 0
-    
-    fileprivate var isPaused = false {
-        didSet {
-            if isPaused {
-                first = nil
-                currentJob?.clear()
-                currentJob = nil
-            }
-        }
-    }
     fileprivate weak var currentJob: AnimationSeries?
     
-    public var onNext: (() -> Void)? = {  }
-    
-    init(first: AnimationSeries, totalLoopCount: Int = 0) {
+    init(first: AnimationSeries) {
         self.first = first
     }
     
@@ -89,17 +74,35 @@ open class ChainAnimation: AnimationSeries {
     }
     
     public func clear() {
-        self.isPaused = true
+        first = nil
+        currentJob?.clear()
+        currentJob = nil
         self.onNext = nil
         AnimationPool.shared.release(self)
     }
 }
 
 
-open class ParallelAnimation: AnimationSeries {
+
+
+// MARK: ParallelAnimation
+
+
+/// concrete implementation of AnimationSeries for parallel operation
+class ParallelAnimation: AnimationSeries {
     
+    
+    // public stored properties
+    public var key: String = String.ranKey(10) {
+        didSet {
+            AnimationPool.shared.key(changed: key, from: oldValue)
+        }
+    }
+    public var onNext: (() -> Void)?
+    public var animationDidFinish: (() -> Void)?
+    
+    // internal private stored properties
     private var series: [AnimationSeries] = []
-    
     private var endCount = 0
     
     init(series: AnimationSeries...) {
@@ -110,15 +113,18 @@ open class ParallelAnimation: AnimationSeries {
         }
     }
     
+    /// this method called when a single animation end -> check all animation end or not
     private func animationEndBlock() {
-        guard !series.isEmpty else { return }
-        endCount += 1
-        if endCount % series.count == 0 {
-            self.onNext?()
+        if !series.isEmpty {
+            endCount += 1
+            
+            // if all animations were end on this cycle
+            if endCount % series.count == 0 {
+                self.onNext?()
+                self.animationDidFinish?()
+            }
         }
     }
-    
-    public var onNext: (() -> Void)?
     
     public func start() {
         series.forEach{
@@ -128,23 +134,30 @@ open class ParallelAnimation: AnimationSeries {
     
     public func clear() {
         onNext = nil
+        series.forEach {
+            $0.clear()
+        }
         AnimationPool.shared.release(self)
     }
-    
-    public var key: String = String.ranKey(10) {
-        didSet {
-            AnimationPool.shared.key(changed: key, from: oldValue)
-        }
+
+    func release() {
+        self.series.removeAll()
     }
-    
-    
 }
 
+
+
+
+
+// MARK: AnimationSeries operations
+
+/// combine ohe AnimationSeries with another
 public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSeries {
-    let sender = ChainAnimation(first: previous)
+    let sender = AnimationCombine(first: previous)
     AnimationPool.shared.append(holder: sender, components: previous, next)
     next.onNext = { [weak sender] in
         sender?.onNext?()
+        sender?.animationDidFinish?()
     }
     previous.onNext = { [weak sender, weak next] in
         sender?.currentJob = next
@@ -155,78 +168,54 @@ public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSer
 }
 
 
+/// combine two AnimationSeries in parallel
 public func | (left: AnimationSeries, right: AnimationSeries) -> AnimationSeries {
     let sender = ParallelAnimation(series: left, right)
     AnimationPool.shared.append(holder: sender, components: left, right)
     return sender
 }
 
+
 public func * (anim: AnimationSeries, times: Int) -> AnimationSeries {
-    if let single = anim as? SingleAnimation {
-        return single * times
-    }else if let chain = anim as? ChainAnimation {
-        return chain * times
-    }else if let parall = anim as? ParallelAnimation {
-        return parall * times
-    }
-    else{
-        return anim
-    }
+    return anim.doRepeat(times: times)
 }
 
-
-private func * (single: SingleAnimation, times: Int) -> AnimationSeries {
-    let sender = ChainAnimation(first: single, totalLoopCount: times)
-    AnimationPool.shared.append(holder: sender, components: single)
-    var count = 0
-    single.onNext = { [weak single, weak sender] in
-        count += 1
-
-        if count > times {
-            count = 0
-            sender?.onNext?()
-        }else{
-            single?.start()
-        }
-    }
-    sender.currentJob = single
-    return sender
-}
-
-private func * (parall: ParallelAnimation, times: Int) -> AnimationSeries {
-    let sender = ChainAnimation(first: parall, totalLoopCount: times)
-    AnimationPool.shared.append(holder: sender, components: parall)
-    var count = 0
-    parall.onNext = { [weak parall, weak sender] in
-        count += 1
-        
-        if count > times {
-            count = 0
-            sender?.onNext?()
-        }else{
-            parall?.start()
-        }
-    }
-    sender.currentJob = parall
-    return sender
-}
-
-private func * (series: ChainAnimation, times: Int) -> AnimationSeries {
-    let sender = ChainAnimation(first: series, totalLoopCount: times)
-    AnimationPool.shared.append(holder: sender, components: series)
+fileprivate extension AnimationSeries {
     
-    series.onNext = { [weak series, weak sender] in
-        // series end -> loopCount++ -> loop
-        series?.loopCount += 1
+    func doRepeat(times: Int) -> AnimationSeries {
+        let sender = AnimationCombine(first: self)
+        AnimationPool.shared.append(holder: sender, components: self)
         
-        if series?.loopCount ?? times >= times {
-            series?.loopCount = 0
-            sender?.onNext?()
+        var count = 0
+        self.onNext = { [weak self, weak sender] in
+            count += 1
             
-        }else{
-            series?.start()
+            if count > times {
+                sender?.onNext?()
+                sender?.animationDidFinish?()
+            }else{
+                self?.start()
+            }
+        }
+        
+        sender.currentJob = self
+        return sender
+    }
+}
+
+
+
+
+
+
+// MARK: Utils
+
+
+extension String {
+    static var ranKey: (Int) -> String {
+        return { len in
+            let pool = "abcdefghijklmnopABCDEFGHIJKLMNOP1234567890".map{ $0 }
+            return String((0..<len).map{ _ in pool[Int.random(in: 0..<pool.count)] })
         }
     }
-    sender.currentJob = series
-    return sender
 }

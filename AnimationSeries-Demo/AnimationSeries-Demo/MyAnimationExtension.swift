@@ -11,12 +11,12 @@ import AnimationSeries
 
 extension UIView {
     
-    public func move(path: [(CGPoint, AnimationParameter)]) -> AnimationSeries? {
+    public func move(path: [(CGPoint, ViewAnimation.Parameter)]) -> AnimationSeries? {
         guard !path.isEmpty else { return nil }
         var sender: AnimationSeries!
         path.forEach { tp in
             if sender == nil {
-                sender = self.move(position: tp.0, params: tp.1) + self.move(position: tp.0, params: AnimationParameter(0.0))
+                sender = self.move(position: tp.0, params: tp.1) + self.move(position: tp.0, params: ViewAnimation.Parameter(0.0))
             }else{
                 sender = sender + self.move(position: tp.0, params: tp.1)
             }
