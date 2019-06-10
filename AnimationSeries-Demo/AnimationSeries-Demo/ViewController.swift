@@ -55,7 +55,7 @@ extension ViewController {
             print("shrink(single animation) end.")
         }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
 
-        anim.onNext = { [weak anim] in
+        anim.animationDidFinish = { [weak anim] in
             print("Intial animation(animation series) end. -> release point")
             AnimationPool.shared.release(anim)
         }
@@ -77,7 +77,7 @@ extension ViewController {
             ary.append((CGPoint(x: ary.count + 10, y: 0), params))
         })
         let anim = animView.move(path: paths)
-        anim?.onNext = { [weak anim] in
+        anim?.animationDidFinish = { [weak anim] in
             print("moving all end..")
             AnimationPool.shared.release(anim)
         }
@@ -114,7 +114,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         
         clearCurrentAnimation()
         currentAnimations = cell.type.animate(self.animView)
-        currentAnimations?.onNext = { [weak self] in
+        currentAnimations?.animationDidFinish = { [weak self] in
             AnimationPool.shared.release(self?.currentAnimations)
         }
         currentAnimations?.start()
