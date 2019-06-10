@@ -23,6 +23,7 @@ public protocol AnimationSeries: class {
     var key: String { get set }
 }
 
+
 // MARK: AnimationSeries clear method default implementation
 
 public extension AnimationSeries {
@@ -36,6 +37,10 @@ public extension AnimationSeries {
 
 
 
+// MARK: AnimationSeries traits
+
+
+
 // MARK: AnimationAtom for represent single animation
 fileprivate protocol AnimationAtom: AnimationSeries {}
 
@@ -44,7 +49,7 @@ fileprivate protocol AnimationAtom: AnimationSeries {}
 // MARK: AnimationCombine
 
 
-/// concrete implementation of AnimationSeries
+/// concrete implementation of AnimationSeries for serial operation
 fileprivate class AnimationCombine: AnimationSeries {
     
     public var key: String = String.ranKey(10) {
@@ -53,24 +58,13 @@ fileprivate class AnimationCombine: AnimationSeries {
         }
     }
     
+    public var onNext: (() -> Void)?
+    
+    
     fileprivate var first: AnimationSeries?
-    
-    fileprivate var loopCount: Int = 0
-    
-    fileprivate var isPaused = false {
-        didSet {
-            if isPaused {
-                first = nil
-                currentJob?.clear()
-                currentJob = nil
-            }
-        }
-    }
     fileprivate weak var currentJob: AnimationSeries?
     
-    public var onNext: (() -> Void)? = {  }
-    
-    init(first: AnimationSeries, totalLoopCount: Int = 0) {
+    init(first: AnimationSeries) {
         self.first = first
     }
     
@@ -79,7 +73,9 @@ fileprivate class AnimationCombine: AnimationSeries {
     }
     
     public func clear() {
-        self.isPaused = true
+        first = nil
+        currentJob?.clear()
+        currentJob = nil
         self.onNext = nil
         AnimationPool.shared.release(self)
     }
@@ -88,10 +84,24 @@ fileprivate class AnimationCombine: AnimationSeries {
 
 
 
+// MARK: ParallelAnimation
+
+
+/// concrete implementation of AnimationSeries for parallel operation
 fileprivate class ParallelAnimation: AnimationSeries {
     
-    private var series: [AnimationSeries] = []
     
+    // public stored properties
+    public var key: String = String.ranKey(10) {
+        didSet {
+            AnimationPool.shared.key(changed: key, from: oldValue)
+        }
+    }
+    public var onNext: (() -> Void)?
+    
+    
+    // internal private stored properties
+    private var series: [AnimationSeries] = []
     private var endCount = 0
     
     init(series: AnimationSeries...) {
@@ -102,15 +112,17 @@ fileprivate class ParallelAnimation: AnimationSeries {
         }
     }
     
+    /// this method called when a single animation end -> check all animation end or not
     private func animationEndBlock() {
-        guard !series.isEmpty else { return }
-        endCount += 1
-        if endCount % series.count == 0 {
-            self.onNext?()
+        if !series.isEmpty {
+            endCount += 1
+            
+            // if all animations were end on this cycle
+            if endCount % series.count == 0 {
+                self.onNext?()
+            }
         }
     }
-    
-    public var onNext: (() -> Void)?
     
     public func start() {
         series.forEach{
@@ -120,18 +132,20 @@ fileprivate class ParallelAnimation: AnimationSeries {
     
     public func clear() {
         onNext = nil
+        series.forEach {
+            $0.clear()
+        }
         AnimationPool.shared.release(self)
     }
-    
-    public var key: String = String.ranKey(10) {
-        didSet {
-            AnimationPool.shared.key(changed: key, from: oldValue)
-        }
-    }
-    
-    
 }
 
+
+
+
+
+// MARK: AnimationSeries operations
+
+/// combine ohe AnimationSeries with another
 public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSeries {
     let sender = AnimationCombine(first: previous)
     AnimationPool.shared.append(holder: sender, components: previous, next)
@@ -147,81 +161,45 @@ public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSer
 }
 
 
+/// combine two AnimationSeries in parallel
 public func | (left: AnimationSeries, right: AnimationSeries) -> AnimationSeries {
     let sender = ParallelAnimation(series: left, right)
     AnimationPool.shared.append(holder: sender, components: left, right)
     return sender
 }
 
+
 public func * (anim: AnimationSeries, times: Int) -> AnimationSeries {
-    if let single = anim as? AnimationAtom {
-        return single * times
-    }else if let chain = anim as? AnimationCombine {
-        return chain * times
-    }else if let parall = anim as? ParallelAnimation {
-        return parall * times
-    }
-    else{
-        return anim
-    }
+    return anim.doRepeat(times: times)
 }
 
-
-private func * (single: AnimationAtom, times: Int) -> AnimationSeries {
-    let sender = AnimationCombine(first: single, totalLoopCount: times)
-    AnimationPool.shared.append(holder: sender, components: single)
-    var count = 0
-    single.onNext = { [weak single, weak sender] in
-        count += 1
-
-        if count > times {
-            count = 0
-            sender?.onNext?()
-        }else{
-            single?.start()
-        }
-    }
-    sender.currentJob = single
-    return sender
-}
-
-private func * (parall: ParallelAnimation, times: Int) -> AnimationSeries {
-    let sender = AnimationCombine(first: parall, totalLoopCount: times)
-    AnimationPool.shared.append(holder: sender, components: parall)
-    var count = 0
-    parall.onNext = { [weak parall, weak sender] in
-        count += 1
-        
-        if count > times {
-            count = 0
-            sender?.onNext?()
-        }else{
-            parall?.start()
-        }
-    }
-    sender.currentJob = parall
-    return sender
-}
-
-private func * (series: AnimationCombine, times: Int) -> AnimationSeries {
-    let sender = AnimationCombine(first: series, totalLoopCount: times)
-    AnimationPool.shared.append(holder: sender, components: series)
+fileprivate extension AnimationSeries {
     
-    series.onNext = { [weak series, weak sender] in
-        // series end -> loopCount++ -> loop
-        series?.loopCount += 1
+    func doRepeat(times: Int) -> AnimationSeries {
+        let sender = AnimationCombine(first: self)
+        AnimationPool.shared.append(holder: sender, components: self)
         
-        if series?.loopCount ?? times >= times {
-            series?.loopCount = 0
-            sender?.onNext?()
+        var count = 0
+        self.onNext = { [weak self, weak sender] in
+            count += 1
             
-        }else{
-            series?.start()
+            if count > times {
+                sender?.onNext?()
+            }else{
+                self?.start()
+            }
         }
+        
+        sender.currentJob = self
+        return sender
     }
-    sender.currentJob = series
-    return sender
 }
+
+//fileprivate extension AnimationSeries where Self: AnimationCombine {
+//
+//}
+//
+
 
 
 
