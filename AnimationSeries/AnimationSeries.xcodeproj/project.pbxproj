@@ -6,28 +6,25 @@
 	objectVersion = 50;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		2B9B5F82221C687100B6B481 /* UniveralAnimationSeries */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 2B9B5F83221C687100B6B481 /* Build configuration list for PBXAggregateTarget "UniveralAnimationSeries" */;
-			buildPhases = (
-				2B9B5F86221C688100B6B481 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = UniveralAnimationSeries;
-			productName = UniveralAnimationSeries;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		2B3DF19B22508A4B007A2197 /* AnimationPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3DF19A22508A4B007A2197 /* AnimationPool.swift */; };
 		2B74BA9F2219720B00480D68 /* AnimationSeries.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B74BA9D2219720B00480D68 /* AnimationSeries.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2B74BAC7221973DB00480D68 /* UIView_AnimationSeries+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */; };
 		2B74BAC8221973DB00480D68 /* AnimationSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BAC5221973DB00480D68 /* AnimationSeries.swift */; };
 		2B74BAE02219B80100480D68 /* ViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BADF2219B80100480D68 /* ViewAnimation.swift */; };
-		2BD1D2E82245D7CA00D3F074 /* AnimationParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD1D2E72245D7CA00D3F074 /* AnimationParameter.swift */; };
+		2BA3DFAE22AECE9A00B41C88 /* AnimationSeriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */; };
+		2BA3DFB022AECE9A00B41C88 /* AnimationSeries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BA9A2219720B00480D68 /* AnimationSeries.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2BA3DFB122AECE9A00B41C88 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B74BA912219720B00480D68 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B74BA992219720B00480D68;
+			remoteInfo = AnimationSeries;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2B3DF19A22508A4B007A2197 /* AnimationPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationPool.swift; sourceTree = "<group>"; };
@@ -37,7 +34,9 @@
 		2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView_AnimationSeries+Extension.swift"; sourceTree = "<group>"; };
 		2B74BAC5221973DB00480D68 /* AnimationSeries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationSeries.swift; sourceTree = "<group>"; };
 		2B74BADF2219B80100480D68 /* ViewAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAnimation.swift; sourceTree = "<group>"; };
-		2BD1D2E72245D7CA00D3F074 /* AnimationParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationParameter.swift; sourceTree = "<group>"; };
+		2BA3DFAB22AECE9A00B41C88 /* AnimationSeriesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnimationSeriesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationSeriesTests.swift; sourceTree = "<group>"; };
+		2BA3DFAF22AECE9A00B41C88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +47,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2BA3DFA822AECE9A00B41C88 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BA3DFB022AECE9A00B41C88 /* AnimationSeries.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -55,6 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				2B74BA9C2219720B00480D68 /* Sources */,
+				2BA3DFAC22AECE9A00B41C88 /* AnimationSeriesTests */,
 				2B74BA9B2219720B00480D68 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				2B74BA9A2219720B00480D68 /* AnimationSeries.framework */,
+				2BA3DFAB22AECE9A00B41C88 /* AnimationSeriesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -72,13 +81,21 @@
 			children = (
 				2B74BA9D2219720B00480D68 /* AnimationSeries.h */,
 				2B74BA9E2219720B00480D68 /* Info.plist */,
-				2BD1D2E72245D7CA00D3F074 /* AnimationParameter.swift */,
 				2B74BADF2219B80100480D68 /* ViewAnimation.swift */,
 				2B74BAC4221973DB00480D68 /* UIView_AnimationSeries+Extension.swift */,
 				2B74BAC5221973DB00480D68 /* AnimationSeries.swift */,
 				2B3DF19A22508A4B007A2197 /* AnimationPool.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		2BA3DFAC22AECE9A00B41C88 /* AnimationSeriesTests */ = {
+			isa = PBXGroup;
+			children = (
+				2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */,
+				2BA3DFAF22AECE9A00B41C88 /* Info.plist */,
+			);
+			path = AnimationSeriesTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -113,12 +130,31 @@
 			productReference = 2B74BA9A2219720B00480D68 /* AnimationSeries.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		2BA3DFAA22AECE9A00B41C88 /* AnimationSeriesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BA3DFB522AECE9A00B41C88 /* Build configuration list for PBXNativeTarget "AnimationSeriesTests" */;
+			buildPhases = (
+				2BA3DFA722AECE9A00B41C88 /* Sources */,
+				2BA3DFA822AECE9A00B41C88 /* Frameworks */,
+				2BA3DFA922AECE9A00B41C88 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2BA3DFB222AECE9A00B41C88 /* PBXTargetDependency */,
+			);
+			name = AnimationSeriesTests;
+			productName = AnimationSeriesTests;
+			productReference = 2BA3DFAB22AECE9A00B41C88 /* AnimationSeriesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		2B74BA912219720B00480D68 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = ParkHyunsoo;
 				TargetAttributes = {
@@ -126,8 +162,8 @@
 						CreatedOnToolsVersion = 10.1;
 						LastSwiftMigration = 1010;
 					};
-					2B9B5F82221C687100B6B481 = {
-						CreatedOnToolsVersion = 10.1;
+					2BA3DFAA22AECE9A00B41C88 = {
+						CreatedOnToolsVersion = 11.0;
 					};
 				};
 			};
@@ -144,7 +180,7 @@
 			projectRoot = "";
 			targets = (
 				2B74BA992219720B00480D68 /* AnimationSeries */,
-				2B9B5F82221C687100B6B481 /* UniveralAnimationSeries */,
+				2BA3DFAA22AECE9A00B41C88 /* AnimationSeriesTests */,
 			);
 		};
 /* End PBXProject section */
@@ -157,34 +193,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		2B9B5F86221C688100B6B481 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
+		2BA3DFA922AECE9A00B41C88 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"AnimationSeries\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\nxcodebuild -target \"AnimationSeries\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/AnimationSeries.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/AnimationSeries.framework/Modules/AnimationSeries.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/AnimationSeries.framework/Modules/AnimationSeries.swiftmodule\"\nfi\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/AnimationSeries.framework/AnimationSeries\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/AnimationSeries.framework/AnimationSeries\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/AnimationSeries.framework/AnimationSeries\"\n# Step 5. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/AnimationSeries.framework\" \"${PROJECT_DIR}\"\n# Step 6. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"\n";
 		};
-/* End PBXShellScriptBuildPhase section */
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2B74BA962219720B00480D68 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BD1D2E82245D7CA00D3F074 /* AnimationParameter.swift in Sources */,
 				2B3DF19B22508A4B007A2197 /* AnimationPool.swift in Sources */,
 				2B74BAC8221973DB00480D68 /* AnimationSeries.swift in Sources */,
 				2B74BAE02219B80100480D68 /* ViewAnimation.swift in Sources */,
@@ -192,7 +214,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2BA3DFA722AECE9A00B41C88 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BA3DFAE22AECE9A00B41C88 /* AnimationSeriesTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2BA3DFB222AECE9A00B41C88 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B74BA992219720B00480D68 /* AnimationSeries */;
+			targetProxy = 2BA3DFB122AECE9A00B41C88 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2B74BAA02219720B00480D68 /* Debug */ = {
@@ -385,21 +423,41 @@
 			};
 			name = Release;
 		};
-		2B9B5F84221C687100B6B481 /* Debug */ = {
+		2BA3DFB322AECE9A00B41C88 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2ABNASUGL6;
+				INFOPLIST_FILE = AnimationSeriesTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = gearmamn06.AnimationSeriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		2B9B5F85221C687100B6B481 /* Release */ = {
+		2BA3DFB422AECE9A00B41C88 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2ABNASUGL6;
+				INFOPLIST_FILE = AnimationSeriesTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = gearmamn06.AnimationSeriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -424,11 +482,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2B9B5F83221C687100B6B481 /* Build configuration list for PBXAggregateTarget "UniveralAnimationSeries" */ = {
+		2BA3DFB522AECE9A00B41C88 /* Build configuration list for PBXNativeTarget "AnimationSeriesTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2B9B5F84221C687100B6B481 /* Debug */,
-				2B9B5F85221C687100B6B481 /* Release */,
+				2BA3DFB322AECE9A00B41C88 /* Debug */,
+				2BA3DFB422AECE9A00B41C88 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

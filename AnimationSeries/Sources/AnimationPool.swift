@@ -38,6 +38,9 @@ public class AnimationPool {
     
     private func release(_ key: String?) {
         guard let key = key else { return }
+        if let parallel = seriesReferences[key] as? ParallelAnimation {
+            parallel.release()
+        }
         seriesReferences[key] = nil
         guard var ary = self.references[key] as? [AnimationSeries] else { return }
         let keys = ary.map{ $0.key }
