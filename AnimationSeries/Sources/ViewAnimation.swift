@@ -30,6 +30,7 @@ open class ViewAnimation: AnimationSeries {
     
     // public stored properties
     public var onNext: (() -> Void)?
+    public var animationDidFinish: (() -> Void)?
     public var key: String = String.ranKey(10) {
         didSet {
             AnimationPool.shared.key(changed: key, from: oldValue)
@@ -171,7 +172,7 @@ class Sizing: ViewAnimation {
 
 infix operator =>
 
-fileprivate func => (condition: Bool, action: () -> Void) {
+public func => (condition: Bool, action: () -> Void) {
     if condition {
         action()
     }

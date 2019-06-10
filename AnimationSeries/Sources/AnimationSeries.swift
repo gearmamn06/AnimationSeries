@@ -21,6 +21,7 @@ public protocol AnimationSeries: class {
     func start()
     func clear()
     var key: String { get set }
+    var animationDidFinish: (() -> Void)? { get set }
 }
 
 
@@ -59,7 +60,7 @@ fileprivate class AnimationCombine: AnimationSeries {
     }
     
     public var onNext: (() -> Void)?
-    
+    public var animationDidFinish: (() -> Void)?
     
     fileprivate var first: AnimationSeries?
     fileprivate weak var currentJob: AnimationSeries?
@@ -88,7 +89,7 @@ fileprivate class AnimationCombine: AnimationSeries {
 
 
 /// concrete implementation of AnimationSeries for parallel operation
-fileprivate class ParallelAnimation: AnimationSeries {
+class ParallelAnimation: AnimationSeries {
     
     
     // public stored properties
@@ -98,7 +99,7 @@ fileprivate class ParallelAnimation: AnimationSeries {
         }
     }
     public var onNext: (() -> Void)?
-    
+    public var animationDidFinish: (() -> Void)?
     
     // internal private stored properties
     private var series: [AnimationSeries] = []
@@ -120,6 +121,7 @@ fileprivate class ParallelAnimation: AnimationSeries {
             // if all animations were end on this cycle
             if endCount % series.count == 0 {
                 self.onNext?()
+                self.animationDidFinish?()
             }
         }
     }
@@ -137,6 +139,10 @@ fileprivate class ParallelAnimation: AnimationSeries {
         }
         AnimationPool.shared.release(self)
     }
+
+    func release() {
+        self.series.removeAll()
+    }
 }
 
 
@@ -151,6 +157,7 @@ public func + (previous: AnimationSeries, next: AnimationSeries) -> AnimationSer
     AnimationPool.shared.append(holder: sender, components: previous, next)
     next.onNext = { [weak sender] in
         sender?.onNext?()
+        sender?.animationDidFinish?()
     }
     previous.onNext = { [weak sender, weak next] in
         sender?.currentJob = next
@@ -185,6 +192,7 @@ fileprivate extension AnimationSeries {
             
             if count > times {
                 sender?.onNext?()
+                sender?.animationDidFinish?()
             }else{
                 self?.start()
             }
@@ -195,10 +203,6 @@ fileprivate extension AnimationSeries {
     }
 }
 
-//fileprivate extension AnimationSeries where Self: AnimationCombine {
-//
-//}
-//
 
 
 
