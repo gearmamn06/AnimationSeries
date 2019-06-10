@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "AnimationSeries"
-  spec.version      = "1.3.0"
+  spec.version      = "1.4.0"
   spec.summary      = "Easy way to create a chain of animation."
 
 
@@ -36,7 +36,7 @@ SOFTWARE.
   spec.author             = { "gearmamn06" => "gearmamn06@gmail.com" }
 
 
-  # spec.swift_version = "4.2"
+  spec.swift_version = "5.0"
   spec.platform     = :ios
   # spec.platform     = :ios, "5.0"
 
