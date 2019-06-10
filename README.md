@@ -16,7 +16,7 @@ func drunkAnimation() {
     let stumble = (🚶.move(position: CGPoint(x: -10, y: 0), duration: 0.5) + 🚶.move(position: CGPoint(x: 10, y: 0), duration: 0.5)) * 10
     let puke = (🤢.sizing(scale: (100, 100), duration: 0.4) + 🤢.sizing(scale: (0.1, 0.1), duration: 0.2)) * 10
         
-    let drunk = (headbanging + stumble + puke) * Int.max
+    let drunk = (headbanging | stumble | puke) * Int.max
     drunk.start()
  }
 ```
@@ -142,6 +142,13 @@ Call the start method of a new instance to start a series of animations. Similar
 
 ```
 
+### Parallel animation
+
+If you want certain animations to start at the same time, Connect the animations with the | operator <br />
+
+```swift
+    let drunk = (headbanging | stumble | puke) * Int.max
+```
 
 ### Loop animation
 
