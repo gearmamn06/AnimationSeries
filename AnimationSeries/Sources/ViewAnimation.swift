@@ -172,7 +172,7 @@ class Sizing: ViewAnimation {
 
 infix operator =>
 
-public func => (condition: Bool, action: () -> Void) {
+fileprivate func => (condition: Bool, action: () -> Void) {
     if condition {
         action()
     }
