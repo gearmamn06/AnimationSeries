@@ -20,9 +20,10 @@ final class SingleAnimationMockup: ViewAnimation {
 }
 
 
-class SingleAnimationTest: XCTestCase {
+class SingleAnimationTest: XCTestCase, SingleAnimationCaseTestable {
     
-    var view: UIView!
+    var testingTarget: AnimationSeries?
+    private var view: UIView!
     
     override func setUp() {
         view = UIView()
@@ -30,7 +31,8 @@ class SingleAnimationTest: XCTestCase {
     
     override func tearDown() {
         view = nil
-        AnimationPool.shared.release()
+        AnimationPool.shared.release(testingTarget)
+        testingTarget = nil
     }
     
     func testAnimationTimming() {
@@ -50,6 +52,7 @@ class SingleAnimationTest: XCTestCase {
             intervalToCompleteClosure = Date().timeIntervalSince(startTime)
             completeClosureWorking = true
         }
+        self.testingTarget = anim
 
         anim.animationDidFinish = {
             promise.fulfill()
@@ -60,7 +63,7 @@ class SingleAnimationTest: XCTestCase {
         anim.start()
         waitForExpectations(timeout: 15, handler: nil)
         
-        let precision: TimeInterval = 0.05
+        let precision: TimeInterval = 0.1
         
         let expected = parameter.delay + parameter.duration
         let expectedRange = expected-precision...expected+precision
