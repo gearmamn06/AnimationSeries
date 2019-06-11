@@ -9,7 +9,7 @@
 import Foundation
 
 
-public typealias CompleteCallback = (Bool) -> Void
+public typealias CompleteCallback = () -> Void
 
 
 

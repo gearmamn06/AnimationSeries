@@ -14,6 +14,7 @@
 		2B74BAE02219B80100480D68 /* ViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B74BADF2219B80100480D68 /* ViewAnimation.swift */; };
 		2BA3DFAE22AECE9A00B41C88 /* AnimationSeriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */; };
 		2BA3DFB022AECE9A00B41C88 /* AnimationSeries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BA9A2219720B00480D68 /* AnimationSeries.framework */; };
+		2BA3DFEF22AFFDA700B41C88 /* SIngleAnimationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFEE22AFFDA700B41C88 /* SIngleAnimationTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		2BA3DFAB22AECE9A00B41C88 /* AnimationSeriesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnimationSeriesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationSeriesTests.swift; sourceTree = "<group>"; };
 		2BA3DFAF22AECE9A00B41C88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2BA3DFEE22AFFDA700B41C88 /* SIngleAnimationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIngleAnimationTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 			children = (
 				2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */,
 				2BA3DFAF22AECE9A00B41C88 /* Info.plist */,
+				2BA3DFEE22AFFDA700B41C88 /* SIngleAnimationTest.swift */,
 			);
 			path = AnimationSeriesTests;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BA3DFEF22AFFDA700B41C88 /* SIngleAnimationTest.swift in Sources */,
 				2BA3DFAE22AECE9A00B41C88 /* AnimationSeriesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
