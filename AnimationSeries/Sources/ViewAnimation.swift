@@ -39,19 +39,20 @@ open class ViewAnimation: AnimationSeries {
 
     // internal fileprivate properties
     fileprivate weak var view: UIView?
-    fileprivate let params:  ViewAnimation.Parameter
+    let params:  ViewAnimation.Parameter
     fileprivate let onCompleted: CompleteCallback?
     
-    init(_ view: UIView, params: ViewAnimation.Parameter, _ complete: CompleteCallback?) {
+    init(_ view: UIView, params: ViewAnimation.Parameter, _ complete: CompleteCallback? = nil) {
         self.view = view
         self.params = params
         self.onCompleted = complete
     }
     
     
-    fileprivate func onEnd() {
+    func onEnd() {
         self.onNext?()
-        self.onCompleted?(true)
+        self.onCompleted?()
+        self.animationDidFinish?()
     }
     
     

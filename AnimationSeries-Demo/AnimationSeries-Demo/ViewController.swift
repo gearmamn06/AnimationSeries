@@ -51,9 +51,11 @@ extension ViewController {
     }
     
     private func startInitialAnim() {
-        let anim = animView.sizing(scale: (40, 40), duration: 0) + animView.sizing(scale: (0.6, 0.6), duration: 1.6, { _ in
-            print("shrink(single animation) end.")
-        }) + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
+        let anim = animView.sizing(scale: (40, 40), duration: 0)
+            + animView.sizing(scale: (0.6, 0.6), duration: 1.6) {
+                print("shrink(single animation) end.")
+            }
+            + animView.sizing(scale: (1.0, 1.0), duration: 0.3)
 
         anim.animationDidFinish = { [weak anim] in
             print("Intial animation(animation series) end. -> release point")
