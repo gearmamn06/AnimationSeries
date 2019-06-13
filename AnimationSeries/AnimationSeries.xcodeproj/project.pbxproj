@@ -15,8 +15,10 @@
 		2BA3DFAE22AECE9A00B41C88 /* AnimationSeriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */; };
 		2BA3DFB022AECE9A00B41C88 /* AnimationSeries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B74BA9A2219720B00480D68 /* AnimationSeries.framework */; };
 		2BA3DFEF22AFFDA700B41C88 /* SIngleAnimationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFEE22AFFDA700B41C88 /* SIngleAnimationTest.swift */; };
-		2BA3DFF122B008AC00B41C88 /* CombineAnimationFlowTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFF022B008AC00B41C88 /* CombineAnimationFlowTest.swift */; };
+		2BA3DFF122B008AC00B41C88 /* SerialAnimationFlowTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFF022B008AC00B41C88 /* SerialAnimationFlowTest.swift */; };
 		2BA3DFF322B0093C00B41C88 /* SingleAnimationCaseTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFF222B0093C00B41C88 /* SingleAnimationCaseTestable.swift */; };
+		2BA3DFF622B29D5C00B41C88 /* SerialAnimationDurationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFF522B29D5C00B41C88 /* SerialAnimationDurationTest.swift */; };
+		2BA3DFF822B2A44100B41C88 /* LoopAnimationFlowTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3DFF722B2A44100B41C88 /* LoopAnimationFlowTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,8 +43,10 @@
 		2BA3DFAD22AECE9A00B41C88 /* AnimationSeriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationSeriesTests.swift; sourceTree = "<group>"; };
 		2BA3DFAF22AECE9A00B41C88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2BA3DFEE22AFFDA700B41C88 /* SIngleAnimationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIngleAnimationTest.swift; sourceTree = "<group>"; };
-		2BA3DFF022B008AC00B41C88 /* CombineAnimationFlowTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineAnimationFlowTest.swift; sourceTree = "<group>"; };
+		2BA3DFF022B008AC00B41C88 /* SerialAnimationFlowTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialAnimationFlowTest.swift; sourceTree = "<group>"; };
 		2BA3DFF222B0093C00B41C88 /* SingleAnimationCaseTestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleAnimationCaseTestable.swift; sourceTree = "<group>"; };
+		2BA3DFF522B29D5C00B41C88 /* SerialAnimationDurationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialAnimationDurationTest.swift; sourceTree = "<group>"; };
+		2BA3DFF722B2A44100B41C88 /* LoopAnimationFlowTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopAnimationFlowTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +106,9 @@
 				2BA3DFAF22AECE9A00B41C88 /* Info.plist */,
 				2BA3DFF222B0093C00B41C88 /* SingleAnimationCaseTestable.swift */,
 				2BA3DFEE22AFFDA700B41C88 /* SIngleAnimationTest.swift */,
-				2BA3DFF022B008AC00B41C88 /* CombineAnimationFlowTest.swift */,
+				2BA3DFF022B008AC00B41C88 /* SerialAnimationFlowTest.swift */,
+				2BA3DFF522B29D5C00B41C88 /* SerialAnimationDurationTest.swift */,
+				2BA3DFF722B2A44100B41C88 /* LoopAnimationFlowTest.swift */,
 			);
 			path = AnimationSeriesTests;
 			sourceTree = "<group>";
@@ -227,10 +233,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BA3DFF822B2A44100B41C88 /* LoopAnimationFlowTest.swift in Sources */,
 				2BA3DFEF22AFFDA700B41C88 /* SIngleAnimationTest.swift in Sources */,
+				2BA3DFF622B29D5C00B41C88 /* SerialAnimationDurationTest.swift in Sources */,
 				2BA3DFAE22AECE9A00B41C88 /* AnimationSeriesTests.swift in Sources */,
 				2BA3DFF322B0093C00B41C88 /* SingleAnimationCaseTestable.swift in Sources */,
-				2BA3DFF122B008AC00B41C88 /* CombineAnimationFlowTest.swift in Sources */,
+				2BA3DFF122B008AC00B41C88 /* SerialAnimationFlowTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

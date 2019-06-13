@@ -190,7 +190,7 @@ fileprivate extension AnimationSeries {
         self.onNext = { [weak self, weak sender] in
             count += 1
             
-            if count > times {
+            if count >= times {
                 sender?.onNext?()
                 sender?.animationDidFinish?()
             }else{

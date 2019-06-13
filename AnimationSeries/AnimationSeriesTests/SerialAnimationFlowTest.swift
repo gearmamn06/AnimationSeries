@@ -10,7 +10,7 @@ import XCTest
 @testable import AnimationSeries
 
 
-class CombineAnimationFlowTest: XCTestCase, SingleAnimationCaseTestable {
+class SerialAnimationFlowTest: XCTestCase, SingleAnimationCaseTestable {
     
     var testingTarget: AnimationSeries?
     private var view: UIView!
@@ -26,19 +26,11 @@ class CombineAnimationFlowTest: XCTestCase, SingleAnimationCaseTestable {
     }
 }
 
-fileprivate extension SingleAnimationMockup {
-    static var quickAnimation: (UIView) -> SingleAnimationMockup {
-        return { view in
-            let params = ViewAnimation.Parameter(Double.random(in: 0.001...0.01))
-            return SingleAnimationMockup(view, params: params)
-        }
-    }
-}
 
-extension CombineAnimationFlowTest {
+extension SerialAnimationFlowTest {
     
     
-    func testCombineFlow() {
+    func testSerialAnimationFlow() {
         
         let numberOfAnimations = Int.random(in: 10...100)
         var animationFinishCount = 0
@@ -86,5 +78,15 @@ fileprivate extension SingleAnimationMockup {
     
     var totalDuration: TimeInterval {
         return self.params.duration + self.params.delay
+    }
+}
+
+
+fileprivate extension SingleAnimationMockup {
+    static var quickAnimation: (UIView) -> SingleAnimationMockup {
+        return { view in
+            let params = ViewAnimation.Parameter(Double.random(in: 0.001...0.01))
+            return SingleAnimationMockup(view, params: params)
+        }
     }
 }

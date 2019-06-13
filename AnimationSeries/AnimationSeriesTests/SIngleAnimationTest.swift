@@ -11,7 +11,7 @@ import XCTest
 
 
 
-final class SingleAnimationMockup: ViewAnimation {
+class SingleAnimationMockup: ViewAnimation {
     
     override func start() {
         let timeout = params.delay + params.duration
