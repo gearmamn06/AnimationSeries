@@ -13,8 +13,10 @@ Easy way to create a chain of animation. <br />
 ```swift
 func drunkAnimation() {        
     let headbanging = 🧠.rotate(degree: 360, duration: 0.1)
-    let stumble = (🚶.move(position: CGPoint(x: -10, y: 0), duration: 0.5) + 🚶.move(position: CGPoint(x: 10, y: 0), duration: 0.5)) * 10
-    let puke = (🤢.sizing(scale: (100, 100), duration: 0.4) + 🤢.sizing(scale: (0.1, 0.1), duration: 0.2)) * 10
+    let stumble = (🚶.move(position: CGPoint(x: -10, y: 0), duration: 0.5) 
+        + 🚶.move(position: CGPoint(x: 10, y: 0), duration: 0.5)) * 10
+    let puke = (🤢.sizing(scale: (100, 100), duration: 0.4) 
+        + 🤢.sizing(scale: (0.1, 0.1), duration: 0.2)) * 10
         
     let drunk = (headbanging | stumble | puke) * Int.max
     drunk.start()
